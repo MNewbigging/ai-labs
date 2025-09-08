@@ -29,7 +29,6 @@ export class GameState {
     this.scene.background = new THREE.Color("#1680AF");
 
     this.animatedObject = new AnimatedObject(assetManager);
-    this.animatedObject.position.z = -0.5;
     this.animatedObject.playAnimation("idle");
     this.scene.add(this.animatedObject);
 
@@ -53,14 +52,21 @@ export class GameState {
   }
 
   private setupObjects() {
-    const wall = this.assetManager.getModel(ModelAsset.Wall_1);
-    this.assetManager.applyModelTexture(wall, TextureAsset.SciFi_1A);
-    this.scene.add(wall);
+    const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+    boxGeometry.translate(0, -0.5, 0); // so top of box is at floor level
 
-    const wallAlt = this.assetManager.getModel(ModelAsset.Wall_1_Alt);
-    this.assetManager.applyModelTexture(wallAlt, TextureAsset.SciFi_1A);
-    wallAlt.position.x = 5;
-    this.scene.add(wallAlt);
+    const floorMaterial = new THREE.MeshLambertMaterial({
+      map: this.assetManager.textures.get(TextureAsset.PrototypeBlack),
+    });
+
+    for (let x = 0; x < 10; x++) {
+      for (let z = 0; z < 10; z++) {
+        const cube = new THREE.Mesh(boxGeometry, floorMaterial);
+
+        cube.position.set(x, 0, z);
+        this.scene.add(cube);
+      }
+    }
   }
 
   private update = () => {

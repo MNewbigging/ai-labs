@@ -10,13 +10,11 @@ export enum AnimationAsset {
 
 export enum ModelAsset {
   BANDIT = "bandit.fbx",
-  Wall_1 = "SM_Bld_Wall_01.fbx",
-  Wall_1_Alt = "SM_Bld_Wall_01_Alt.fbx",
 }
 
 export enum TextureAsset {
   BANDIT = "bandit-texture.png",
-  SciFi_1A = "PolygonSciFiSpace_Texture_01_A.png",
+  PrototypeBlack = "texture_06_black.png",
 }
 
 export class AssetManager {
@@ -69,14 +67,6 @@ export class AssetManager {
   }
 
   private loadModels() {
-    this.loadModel(ModelAsset.Wall_1, (group) =>
-      group.scale.multiplyScalar(0.01)
-    );
-
-    this.loadModel(ModelAsset.Wall_1_Alt, (group) =>
-      group.scale.multiplyScalar(0.01)
-    );
-
     this.loadModel(ModelAsset.BANDIT);
   }
 
@@ -87,7 +77,7 @@ export class AssetManager {
     );
 
     this.loadTexture(
-      TextureAsset.SciFi_1A,
+      TextureAsset.PrototypeBlack,
       (texture) => (texture.colorSpace = THREE.SRGBColorSpace)
     );
   }

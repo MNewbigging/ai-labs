@@ -10,7 +10,6 @@ export enum AnimationAsset {
 
 export enum ModelAsset {
   BANDIT = "bandit.fbx",
-  BOX_SMALL = "box-small.glb",
   Wall_1 = "SM_Bld_Wall_01.fbx",
   Wall_1_Alt = "SM_Bld_Wall_01_Alt.fbx",
 }
@@ -80,14 +79,6 @@ export class AssetManager {
     );
 
     this.loadModel(ModelAsset.BANDIT);
-
-    this.loadModel(ModelAsset.BOX_SMALL, (group: THREE.Group) => {
-      group.traverse((child: THREE.Object3D) => {
-        if (child instanceof THREE.Mesh) {
-          child.material.metalness = 0; // kenney assets require this to render correctly
-        }
-      });
-    });
   }
 
   private loadTextures() {

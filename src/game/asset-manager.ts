@@ -16,7 +16,6 @@ export enum ModelAsset {
 
 export enum TextureAsset {
   BANDIT = "bandit-texture.png",
-  HDR = "orchard_cartoony.hdr",
   SciFi_1A = "PolygonSciFiSpace_Texture_01_A.png",
 }
 
@@ -85,11 +84,6 @@ export class AssetManager {
     this.loadTexture(
       TextureAsset.BANDIT,
       (texture) => (texture.colorSpace = THREE.SRGBColorSpace)
-    );
-
-    this.loadTexture(
-      TextureAsset.HDR,
-      (texture) => (texture.mapping = THREE.EquirectangularReflectionMapping)
     );
 
     this.loadTexture(

@@ -1,8 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RenderPipeline } from "./render-pipeline";
-import { AssetManager, ModelAsset, TextureAsset } from "./asset-manager";
+import { AssetManager } from "./asset-manager";
 import { AnimatedObject } from "./animated-object";
+import { WanderExperiment } from "./wander-experiment";
 
 export class GameState {
   private renderPipeline: RenderPipeline;
@@ -14,13 +15,14 @@ export class GameState {
 
   private animatedObject: AnimatedObject;
 
+  private wanderExperiment: WanderExperiment;
+
   constructor(private assetManager: AssetManager) {
     this.setupCamera();
 
     this.renderPipeline = new RenderPipeline(this.scene, this.camera);
 
     this.setupLights();
-    this.setupObjects();
 
     this.controls = new OrbitControls(this.camera, this.renderPipeline.canvas);
     this.controls.enableDamping = true;
@@ -28,9 +30,16 @@ export class GameState {
 
     this.scene.background = new THREE.Color("#1680AF");
 
+    //
+
+    this.wanderExperiment = new WanderExperiment(this.scene, this.assetManager);
+    this.wanderExperiment.buildScene();
+
     this.animatedObject = new AnimatedObject(assetManager);
     this.animatedObject.playAnimation("idle");
     this.scene.add(this.animatedObject);
+
+    this.scene.add(new THREE.AxesHelper(20));
 
     // Start game
     this.update();
@@ -49,24 +58,6 @@ export class GameState {
     const directLight = new THREE.DirectionalLight(undefined, Math.PI);
     directLight.position.copy(new THREE.Vector3(0.75, 1, 0.75).normalize());
     this.scene.add(directLight);
-  }
-
-  private setupObjects() {
-    const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-    boxGeometry.translate(0, -0.5, 0); // so top of box is at floor level
-
-    const floorMaterial = new THREE.MeshLambertMaterial({
-      map: this.assetManager.textures.get(TextureAsset.PrototypeBlack),
-    });
-
-    for (let x = 0; x < 10; x++) {
-      for (let z = 0; z < 10; z++) {
-        const cube = new THREE.Mesh(boxGeometry, floorMaterial);
-
-        cube.position.set(x, 0, z);
-        this.scene.add(cube);
-      }
-    }
   }
 
   private update = () => {

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RenderPipeline } from "./render-pipeline";
-import { AssetManager, ModelAsset } from "./asset-manager";
+import { AssetManager, ModelAsset, TextureAsset } from "./asset-manager";
 import { AnimatedObject } from "./animated-object";
 
 export class GameState {
@@ -53,8 +53,14 @@ export class GameState {
   }
 
   private setupObjects() {
-    const box = this.assetManager.getModel(ModelAsset.BOX_SMALL);
-    this.scene.add(box);
+    const wall = this.assetManager.getModel(ModelAsset.Wall_1);
+    this.assetManager.applyModelTexture(wall, TextureAsset.SciFi_1A);
+    this.scene.add(wall);
+
+    const wallAlt = this.assetManager.getModel(ModelAsset.Wall_1_Alt);
+    this.assetManager.applyModelTexture(wallAlt, TextureAsset.SciFi_1A);
+    wallAlt.position.x = 5;
+    this.scene.add(wallAlt);
   }
 
   private update = () => {

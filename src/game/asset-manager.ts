@@ -11,11 +11,14 @@ export enum AnimationAsset {
 export enum ModelAsset {
   BANDIT = "bandit.fbx",
   BOX_SMALL = "box-small.glb",
+  Wall_1 = "SM_Bld_Wall_01.fbx",
+  Wall_1_Alt = "SM_Bld_Wall_01_Alt.fbx",
 }
 
 export enum TextureAsset {
   BANDIT = "bandit-texture.png",
   HDR = "orchard_cartoony.hdr",
+  SciFi_1A = "PolygonSciFiSpace_Texture_01_A.png",
 }
 
 export class AssetManager {
@@ -68,6 +71,14 @@ export class AssetManager {
   }
 
   private loadModels() {
+    this.loadModel(ModelAsset.Wall_1, (group) =>
+      group.scale.multiplyScalar(0.01)
+    );
+
+    this.loadModel(ModelAsset.Wall_1_Alt, (group) =>
+      group.scale.multiplyScalar(0.01)
+    );
+
     this.loadModel(ModelAsset.BANDIT);
 
     this.loadModel(ModelAsset.BOX_SMALL, (group: THREE.Group) => {
@@ -88,6 +99,11 @@ export class AssetManager {
     this.loadTexture(
       TextureAsset.HDR,
       (texture) => (texture.mapping = THREE.EquirectangularReflectionMapping)
+    );
+
+    this.loadTexture(
+      TextureAsset.SciFi_1A,
+      (texture) => (texture.colorSpace = THREE.SRGBColorSpace)
     );
   }
 

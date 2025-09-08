@@ -52,9 +52,7 @@ export class AnimatedObject extends THREE.Object3D {
   }
 
   private setupAnimations() {
-    const idleClip = this.assetManager.animations.get(
-      AnimationAsset.BANDIT_IDLE
-    )!;
+    const idleClip = this.assetManager.animations.get(AnimationAsset.Idle)!;
     const idleAction = this.mixer.clipAction(idleClip);
     this.actions.set("idle", idleAction);
   }

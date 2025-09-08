@@ -5,7 +5,7 @@ import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 
 export enum AnimationAsset {
-  BANDIT_IDLE = "idle.fbx",
+  Idle = "A_Idle_Standing_Masc.fbx",
 }
 
 export enum ModelAsset {

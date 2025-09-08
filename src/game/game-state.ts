@@ -29,7 +29,7 @@ export class GameState {
     this.scene.background = new THREE.Color("#1680AF");
 
     this.animatedObject = new AnimatedObject(assetManager);
-    this.animatedObject.playAnimation("idle");
+    //this.animatedObject.playAnimation("idle");
     this.scene.add(this.animatedObject);
 
     // Start game

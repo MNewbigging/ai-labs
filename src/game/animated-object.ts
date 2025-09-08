@@ -17,8 +17,8 @@ export class AnimatedObject extends THREE.Object3D {
     super();
 
     // Setup mesh
-    const mesh = assetManager.getModel(ModelAsset.BANDIT);
-    assetManager.applyModelTexture(mesh, TextureAsset.BANDIT);
+    const mesh = assetManager.getModel(ModelAsset.Dummy);
+    assetManager.applyModelTexture(mesh, TextureAsset.Dummy);
 
     this.add(mesh);
 

@@ -9,12 +9,12 @@ export enum AnimationAsset {
 }
 
 export enum ModelAsset {
-  BANDIT = "bandit.fbx",
+  Dummy = "PolygonSyntyCharacter.fbx",
 }
 
 export enum TextureAsset {
-  BANDIT = "bandit-texture.png",
   PrototypeBlack = "texture_06_black.png",
+  Dummy = "T_Polygon_Dummy_01.png",
 }
 
 export class AssetManager {
@@ -37,6 +37,7 @@ export class AssetManager {
     model.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         child.material.map = texture;
+        child.material.vertexColors = false;
       }
     });
   }
@@ -67,12 +68,14 @@ export class AssetManager {
   }
 
   private loadModels() {
-    this.loadModel(ModelAsset.BANDIT);
+    this.loadModel(ModelAsset.Dummy, (group) => {
+      group.scale.multiplyScalar(0.01);
+    });
   }
 
   private loadTextures() {
     this.loadTexture(
-      TextureAsset.BANDIT,
+      TextureAsset.Dummy,
       (texture) => (texture.colorSpace = THREE.SRGBColorSpace)
     );
 

@@ -3,11 +3,14 @@ import { AssetManager, TextureAsset } from "./asset-manager";
 
 export type GridCellType = "floor";
 
+// Variable rows, all rows must have same number of cells
 export type GridSchema = GridCellType[][];
 
 export interface GridCell {
-  object: THREE.Object3D;
+  object: THREE.Object3D; // todo might not be an object for empty cell spaces, add position prop here later
   type: GridCellType;
+  rowIndex: number;
+  cellIndex: number;
 }
 
 // Used in a-star pathfinding only
@@ -115,7 +118,10 @@ export class Grid {
       closedList.push(currentNode);
 
       // Now get the neighbours of that node
-      for (const neighbour of this.getNeighboursOf(currentNode)) {
+      const neighbours = this.getNeighbours(currentNode).map((gridCell) =>
+        this.asPathNode(gridCell)
+      );
+      for (const neighbour of neighbours) {
         // If this node is an obstacle or already explored, ignore it
         if (
           //neighbour.obstacle ||
@@ -145,40 +151,35 @@ export class Grid {
     return undefined;
   }
 
-  // todo - out of bounds checks here...
-  getNeighboursOf(pathNode: PathNode) {
-    const grid = this.cells;
+  getNeighbours(cell: GridCell) {
+    const neighbours: GridCell[] = [];
 
-    // Todo this needs foolproofing - breaks if I stop using unit sizes
-    const row = pathNode.object.position.z;
-    const col = pathNode.object.position.x;
+    const rowCount = this.cells.length;
+    const cellCount = this.cells[0].length; // all rows same width
 
-    let above, below, left, right;
+    const rowUp = cell.rowIndex - 1;
+    const rowDown = cell.rowIndex + 1;
+    const cellLeft = cell.cellIndex - 1;
+    const cellRight = cell.cellIndex + 1;
 
-    if (row > 0) {
-      above = grid[row - 1][col];
-    }
-    if (row < grid.length - 1) {
-      below = grid[row + 1][col];
-    }
+    if (rowUp >= 0) neighbours.push(this.cells[rowUp][cell.cellIndex]);
+    if (rowDown < rowCount)
+      neighbours.push(this.cells[rowDown][cell.cellIndex]);
+    if (cellLeft >= 0) neighbours.push(this.cells[cell.rowIndex][cellLeft]);
+    if (cellRight < cellCount)
+      neighbours.push(this.cells[cell.rowIndex][cellRight]);
 
-    if (col > 0) {
-      left = grid[row][col - 1];
-    }
-    if (col < grid[0].length - 1) {
-      right = grid[row][col + 1];
-    }
+    return neighbours;
+  }
 
-    const neighbourCells = [above, below, left, right].filter(
-      (cell) => cell !== undefined
-    );
-
-    return neighbourCells.map((cell) => ({
+  asPathNode(cell: GridCell): PathNode {
+    return {
       ...cell,
       costFromStart: 0,
       costToEnd: 0,
       costTotal: 0,
-    })) as PathNode[];
+      parent: undefined,
+    };
   }
 
   private calculateCosts(current: PathNode, previous: PathNode, end: PathNode) {
@@ -204,7 +205,7 @@ export class Grid {
         // Completed cell
         const object = this.createCellOfType(type);
         object.position.set(rowIndex, 0, cellIndex);
-        cellRow.push({ type, object });
+        cellRow.push({ type, object, rowIndex, cellIndex });
       }
 
       // Now that the row is finished, add it to grid cells

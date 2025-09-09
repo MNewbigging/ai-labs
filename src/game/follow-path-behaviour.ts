@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { Agent } from "./agent";
 import { GridCell } from "./grid";
+import { AnimationAsset } from "./asset-manager";
 
 // Follows a path
 export class FollowPathBehaviour {
@@ -13,8 +14,11 @@ export class FollowPathBehaviour {
   constructor(public agent: Agent) {}
 
   setPath(path: GridCell[]) {
+    if (!path.length) return;
+
     this.path = path;
     this.nextCell = this.path.shift();
+    this.agent.playAnimation(AnimationAsset.Walk);
   }
 
   update(dt: number) {
@@ -23,7 +27,7 @@ export class FollowPathBehaviour {
     if (this.hasReachedCell(this.nextCell)) {
       this.currentCell = this.nextCell;
       this.nextCell = this.path.shift();
-      // if there is now no target, we reached the end
+      if (!this.nextCell) this.agent.playAnimation(AnimationAsset.Idle);
 
       return;
     }

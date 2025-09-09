@@ -25,6 +25,8 @@ export class GameState {
 
     this.scene.background = new THREE.Color("#1680AF");
 
+    this.scene.add(new THREE.AxesHelper(20));
+
     //
 
     this.wanderExperiment = new WanderExperiment(this.assetManager);

@@ -172,7 +172,7 @@ export class Grid {
     return neighbours;
   }
 
-  asPathNode(cell: GridCell): PathNode {
+  private asPathNode(cell: GridCell): PathNode {
     return {
       ...cell,
       costFromStart: 0,
@@ -204,7 +204,7 @@ export class Grid {
         const type = rowTypes[cellIndex];
         // Completed cell
         const object = this.createCellOfType(type);
-        object.position.set(rowIndex, 0, cellIndex);
+        object.position.set(cellIndex, 0, rowIndex);
         cellRow.push({ type, object, rowIndex, cellIndex });
       }
 

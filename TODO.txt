@@ -1,0 +1,1 @@
+- pause update on losing window focus

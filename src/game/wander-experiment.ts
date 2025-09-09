@@ -19,8 +19,11 @@ export class WanderExperiment {
   constructor(assetManager: AssetManager) {
     // Build the grid for this experiment
     const schema: GridSchema = [
-      ["floor", "floor", "floor"], // non-square grids break
-      ["floor", "floor", "floor"],
+      ["floor", "floor", "floor", "floor", "floor"], // non-square grids break
+      ["floor", "floor", "floor", "floor", "floor"],
+      ["floor", "floor", "floor", "floor", "floor"],
+      ["floor", "floor", "floor", "floor", "floor"],
+      ["floor", "floor", "floor", "floor", "floor"],
     ];
     this.grid = new Grid(schema, assetManager);
     this.group.add(this.grid.group);

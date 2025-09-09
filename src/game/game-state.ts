@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RenderPipeline } from "./render-pipeline";
 import { AssetManager } from "./asset-manager";
-import { AnimatedObject } from "./animated-object";
 import { WanderExperiment } from "./wander-experiment";
 
 export class GameState {
@@ -13,15 +12,11 @@ export class GameState {
   private camera = new THREE.PerspectiveCamera();
   private controls: OrbitControls;
 
-  private animatedObject: AnimatedObject;
-
   private wanderExperiment: WanderExperiment;
 
   constructor(private assetManager: AssetManager) {
     this.setupCamera();
-
     this.renderPipeline = new RenderPipeline(this.scene, this.camera);
-
     this.setupLights();
 
     this.controls = new OrbitControls(this.camera, this.renderPipeline.canvas);
@@ -32,14 +27,8 @@ export class GameState {
 
     //
 
-    this.wanderExperiment = new WanderExperiment(this.scene, this.assetManager);
-    this.wanderExperiment.buildScene();
-
-    this.animatedObject = new AnimatedObject(assetManager);
-    this.animatedObject.playAnimation("idle");
-    this.scene.add(this.animatedObject);
-
-    this.scene.add(new THREE.AxesHelper(20));
+    this.wanderExperiment = new WanderExperiment(this.assetManager);
+    this.scene.add(this.wanderExperiment.group); // this experiment is active by default so add it now
 
     // Start game
     this.update();
@@ -67,7 +56,7 @@ export class GameState {
 
     this.controls.update();
 
-    this.animatedObject.update(dt);
+    this.wanderExperiment.update(dt);
 
     this.renderPipeline.render(dt);
   };

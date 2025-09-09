@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { AssetManager } from "./asset-manager";
-import { GridCellType, GridManager } from "./grid-manager";
+import { Grid, GridSchema } from "./grid";
+import { Agent } from "./agent";
+import { WanderGoal } from "./wander-goal";
 
 /**
  * Wander:
@@ -9,30 +11,35 @@ import { GridCellType, GridManager } from "./grid-manager";
  */
 
 export class WanderExperiment {
-  private group = new THREE.Group(); // Everything this experiment creates is placed in here
-  private gridManager: GridManager;
+  group = new THREE.Group(); // Everything this experiment creates is placed in here
 
-  constructor(private scene: THREE.Scene, private assetManager: AssetManager) {
-    this.gridManager = new GridManager(assetManager);
+  private grid: Grid;
+  private agents: Agent[] = [];
 
-    this.scene.add(this.group);
-  }
+  constructor(assetManager: AssetManager) {
+    // Build the grid for this experiment
+    const schema: GridSchema = [
+      ["floor", "floor", "floor"], // non-square grids break
+      ["floor", "floor", "floor"],
+    ];
+    this.grid = new Grid(schema, assetManager);
+    this.group.add(this.grid.group);
 
-  buildScene() {
-    // Grid schema
-    const gridSchema: GridCellType[] = [];
-    for (let i = 0; i < 100; i++) {
-      gridSchema.push(GridCellType.Floor);
-    }
-    const grid = this.gridManager.buildGrid(gridSchema, 10);
-    this.group.add(grid);
+    // Create the agents
+    const agent = new Agent(this.grid, assetManager);
+    agent.brain.assignGoal(new WanderGoal(agent));
+    agent.positionOnCell(this.grid.cells[0][0]); // better way of doing this?
+    this.group.add(agent.model);
 
-    // Agents
-
-    // todo - sort out the agent class, use that here instead of animated-object
+    this.agents.push(agent);
   }
 
   dispose() {
-    // Cleanup everything
+    this.grid.dispose();
+    this.agents.forEach((agent) => agent.dispose());
+  }
+
+  update(dt: number) {
+    this.agents.forEach((agent) => agent.update(dt));
   }
 }

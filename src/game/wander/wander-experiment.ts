@@ -27,13 +27,15 @@ export class WanderExperiment {
     this.group.add(this.grid.group);
 
     // Create the agents
+    const clips = this.assetManager.getDummyClips();
     [
       TextureAsset.DummyBlue,
       TextureAsset.DummyGreen,
       TextureAsset.DummyYellow,
       TextureAsset.DummyRed,
     ].forEach((colour) => {
-      const agent = new Agent(this.grid, assetManager, colour);
+      const model = this.assetManager.getDummyModel(colour);
+      const agent = new Agent(this.grid, model, clips);
       agent.brain.assignGoal(new WanderGoal(agent));
       this.group.add(agent.model);
 

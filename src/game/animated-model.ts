@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { AnimationAsset } from "./asset-manager";
 
 export class AnimatedModel {
-  private mixer: THREE.AnimationMixer;
+  protected mixer: THREE.AnimationMixer;
   private actions = new Map<string, THREE.AnimationAction>();
   private currentAction?: THREE.AnimationAction;
 

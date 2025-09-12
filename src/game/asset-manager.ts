@@ -33,6 +33,24 @@ export class AssetManager {
   private rgbeLoader = new RGBELoader(this.loadingManager);
   private textureLoader = new THREE.TextureLoader(this.loadingManager);
 
+  getDummyModel(colour: TextureAsset) {
+    const dummy = this.getModel(ModelAsset.Dummy);
+    this.applyModelTexture(dummy, colour);
+
+    return dummy;
+  }
+
+  getDummyClips() {
+    const clips: THREE.AnimationClip[] = [];
+    [AnimationAsset.Idle, AnimationAsset.Jump, AnimationAsset.Walk].forEach(
+      (name) => {
+        const clip = this.animations.get(name);
+        if (clip) clips.push(clip);
+      }
+    );
+    return clips;
+  }
+
   applyModelTexture(model: THREE.Object3D, textureName: TextureAsset) {
     const texture = this.textures.get(textureName);
     if (!texture) {

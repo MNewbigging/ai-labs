@@ -49,7 +49,7 @@ export class GameState {
       this.assetManager
     );
 
-    this.scene.add(this.jumpExperiment.group); // this experiment is active by default so add it now
+    this.scene.add(this.wanderExperiment.group); // this experiment is active by default so add it now
 
     // Start game
     this.update();
@@ -77,7 +77,7 @@ export class GameState {
 
     this.controls.update();
 
-    this.jumpExperiment.update(dt);
+    this.wanderExperiment.update(dt);
 
     this.renderPipeline.render(dt);
   };

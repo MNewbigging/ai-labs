@@ -19,9 +19,16 @@ export class Agent {
   private animations = new Map<AnimationAsset, THREE.AnimationAction>();
   private currentAction?: THREE.AnimationAction;
 
-  constructor(public grid: Grid, private assetManager: AssetManager) {
+  constructor(
+    public grid: Grid,
+    private assetManager: AssetManager,
+    colour?: TextureAsset
+  ) {
     this.model = assetManager.getModel(ModelAsset.Dummy);
-    assetManager.applyModelTexture(this.model, TextureAsset.DummyRed);
+    assetManager.applyModelTexture(
+      this.model,
+      colour ?? TextureAsset.DummyYellow
+    );
 
     this.brain = new Brain();
 

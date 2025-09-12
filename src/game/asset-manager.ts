@@ -40,8 +40,10 @@ export class AssetManager {
 
     model.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        child.material.map = texture;
-        child.material.vertexColors = false;
+        const material = child.material.clone();
+        material.map = texture;
+        material.vertexColors = false;
+        child.material = material;
       }
     });
   }

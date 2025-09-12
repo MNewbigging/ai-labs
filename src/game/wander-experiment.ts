@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { AssetManager } from "./asset-manager";
+import { AssetManager, TextureAsset } from "./asset-manager";
 import { Grid, GridSchema } from "./grid";
 import { Agent } from "./agent";
 import { WanderGoal } from "./wander-goal";
@@ -19,7 +19,7 @@ export class WanderExperiment {
   constructor(assetManager: AssetManager) {
     // Build the grid for this experiment
     const schema: GridSchema = [
-      ["floor", "floor", "floor", "floor", "floor"], // non-square grids break
+      ["floor", "floor", "floor", "floor", "floor"],
       ["floor", "floor", "floor", "floor", "floor"],
       ["floor", "floor", "floor", "floor", "floor"],
       ["floor", "floor", "floor", "floor", "floor"],
@@ -29,12 +29,19 @@ export class WanderExperiment {
     this.group.add(this.grid.group);
 
     // Create the agents
-    const agent = new Agent(this.grid, assetManager);
-    agent.brain.assignGoal(new WanderGoal(agent));
-    agent.positionOnCell(this.grid.cells[0][0]); // better way of doing this?
-    this.group.add(agent.model);
+    [
+      TextureAsset.DummyBlue,
+      TextureAsset.DummyGreen,
+      TextureAsset.DummyYellow,
+      TextureAsset.DummyRed,
+    ].forEach((colour) => {
+      const agent = new Agent(this.grid, assetManager, colour);
+      agent.brain.assignGoal(new WanderGoal(agent));
+      agent.positionOnCell(this.grid.cells[0][0]); // better way of doing this?
+      this.group.add(agent.model);
 
-    this.agents.push(agent);
+      this.agents.push(agent);
+    });
   }
 
   dispose() {

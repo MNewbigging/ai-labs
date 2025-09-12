@@ -7,6 +7,7 @@ import { WanderExperiment } from "./wander-experiment";
 export class GameState {
   private renderPipeline: RenderPipeline;
   private clock = new THREE.Clock();
+  private animFrameRequest = 0;
 
   private scene = new THREE.Scene();
   private camera = new THREE.PerspectiveCamera();
@@ -24,6 +25,11 @@ export class GameState {
     this.controls.target.set(0, 1, 0);
 
     this.scene.background = new THREE.Color("#1680AF");
+
+    //
+
+    window.addEventListener("blur", this.onLoseFocus);
+    window.addEventListener("focus", this.onGainFocus);
 
     //
 
@@ -50,7 +56,7 @@ export class GameState {
   }
 
   private update = () => {
-    requestAnimationFrame(this.update);
+    this.animFrameRequest = requestAnimationFrame(this.update);
 
     const dt = this.clock.getDelta();
 
@@ -59,5 +65,15 @@ export class GameState {
     this.wanderExperiment.update(dt);
 
     this.renderPipeline.render(dt);
+  };
+
+  private onLoseFocus = () => {
+    cancelAnimationFrame(this.animFrameRequest);
+    this.clock.stop();
+  };
+
+  private onGainFocus = () => {
+    this.clock.start();
+    this.update();
   };
 }

@@ -1,2 +1,1 @@
-- pause update on losing window focus
 - see if I can manually apply materials to model submeshes to recolour

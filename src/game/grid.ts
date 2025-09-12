@@ -2,10 +2,11 @@ import * as THREE from "three";
 import { GridCellType } from "./grid-builder";
 
 export interface GridCell {
-  object: THREE.Object3D; // todo might not be an object for empty cell spaces, add position prop here later
+  object?: THREE.Object3D;
   type: GridCellType;
   rowIndex: number;
   cellIndex: number;
+  traversible: boolean;
 }
 
 // Used in a-star pathfinding only
@@ -21,7 +22,11 @@ export class Grid {
 
   constructor(public cells: GridCell[][]) {
     // For easily adding/removing to/from scene
-    cells.forEach((row) => row.forEach((cell) => this.group.add(cell.object)));
+    cells.forEach((row) =>
+      row.forEach((cell) => {
+        if (cell.object) this.group.add(cell.object);
+      })
+    );
   }
 
   // Make into object if props increase
@@ -96,7 +101,7 @@ export class Grid {
       for (const neighbour of neighbours) {
         // If this node is an obstacle or already explored, ignore it
         if (
-          //neighbour.obstacle ||
+          !neighbour.traversible ||
           closedList.some((node) => gridCellsAreEqual(node, neighbour))
         ) {
           continue;
@@ -155,6 +160,9 @@ export class Grid {
   }
 
   private calculateCosts(current: PathNode, previous: PathNode, end: PathNode) {
+    if (!current.object) return;
+    if (!end.object) return;
+
     current.costFromStart = previous.costFromStart + 1;
     current.costToEnd = current.object.position.distanceToSquared(
       end.object.position
@@ -164,5 +172,8 @@ export class Grid {
 }
 
 function gridCellsAreEqual(a: GridCell, b: GridCell) {
+  if (!a.object) return false;
+  if (!b.object) return false;
+
   return a.object.position.equals(b.object.position);
 }

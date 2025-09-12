@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { AssetManager, TextureAsset } from "./asset-manager";
 import { Grid, GridCell } from "./grid";
 
-export type GridCellType = "floor";
+export type GridCellType = "floor" | "void";
 
 // Variable rows, all rows must have same number of cells
 export type GridSchema = GridCellType[][];
@@ -39,12 +39,16 @@ export class GridBuilder {
       const cellRow: GridCell[] = [];
 
       for (let cellIndex = 0; cellIndex < rowTypes.length; cellIndex++) {
-        // Schema for this cell
         const type = rowTypes[cellIndex];
-        // Completed cell
-        const object = this.createCellOfType(type);
-        object.position.set(cellIndex, 0, rowIndex);
-        cellRow.push({ type, object, rowIndex, cellIndex });
+
+        const object = this.createCellObject(type);
+        if (object) {
+          object.position.set(cellIndex, 0, rowIndex);
+        }
+
+        const traversible = this.getTraversible(type);
+
+        cellRow.push({ type, object, rowIndex, cellIndex, traversible });
       }
 
       // Now that the row is finished, add it to grid cells
@@ -54,10 +58,21 @@ export class GridBuilder {
     return gridCells;
   }
 
-  private createCellOfType(type: GridCellType) {
+  private createCellObject(type: GridCellType) {
     switch (type) {
       case "floor":
         return new THREE.Mesh(this.floorGeometry, this.floorMaterial);
+      case "void":
+        return undefined;
+    }
+  }
+
+  private getTraversible(type: GridCellType) {
+    switch (type) {
+      case "floor":
+        return true;
+      case "void":
+        return false;
     }
   }
 }

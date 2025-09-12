@@ -18,7 +18,7 @@ export class WanderGoal extends Goal {
       const currentCell = this.agent.followPathBehaviour.currentCell;
       if (!currentCell) return;
 
-      const targetCell = this.agent.grid.getRandomCell(currentCell);
+      const targetCell = this.agent.grid.getRandomTraversibleCell(currentCell);
       const path = this.agent.grid.getPath(currentCell, targetCell);
       if (path) {
         this.agent.followPathBehaviour.setPath(path);

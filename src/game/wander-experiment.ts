@@ -20,7 +20,7 @@ export class WanderExperiment {
       ["floor", "floor", "floor", "floor", "floor"],
       ["floor", "floor", "floor", "floor", "floor"],
       ["floor", "floor", "floor", "floor", "floor"],
-      ["floor", "floor", "floor", "floor", "floor"],
+      ["floor", "void", "void", "floor", "floor"],
       ["floor", "floor", "floor", "floor", "floor"],
     ];
     this.grid = this.gridBuilder.buildGrid(schema);

@@ -30,7 +30,7 @@ export class Grid {
   }
 
   // Make into object if props increase
-  getRandomCell(exclude?: GridCell) {
+  getRandomTraversibleCell(exclude?: GridCell) {
     let choice: GridCell | undefined;
 
     do {
@@ -38,7 +38,9 @@ export class Grid {
       const row = this.cells[rndRow];
 
       const rndCell = Math.floor(Math.random() * row.length);
-      choice = row[rndCell];
+      const cell = row[rndCell];
+
+      if (cell.traversible) choice = cell;
     } while (!choice || choice === exclude);
 
     return choice;

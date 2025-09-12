@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RenderPipeline } from "./render-pipeline";
 import { AssetManager } from "./asset-manager";
-import { WanderExperiment } from "./wander-experiment";
+import { WanderExperiment } from "./wander/wander-experiment";
 import { GridBuilder } from "./grid-builder";
 
 export class GameState {

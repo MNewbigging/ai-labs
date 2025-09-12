@@ -63,7 +63,7 @@ export class GridBuilder {
       case "floor":
         return new THREE.Mesh(this.floorGeometry, this.floorMaterial);
       case "void":
-        return undefined;
+        return new THREE.Object3D();
     }
   }
 

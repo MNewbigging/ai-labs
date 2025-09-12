@@ -10,7 +10,7 @@ export class FollowPathBehaviour {
   path: GridCell[] = [];
 
   private moveSpeed = 1.8;
-  private turnSpeed = 8;
+  private turnSpeed = 7.2;
 
   private direction = new THREE.Vector3();
   private rotationMatrix = new THREE.Matrix4();

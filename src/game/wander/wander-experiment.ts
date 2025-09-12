@@ -1,9 +1,9 @@
 import * as THREE from "three";
-import { AssetManager, TextureAsset } from "./asset-manager";
-import { Grid } from "./grid";
-import { Agent } from "./agent";
+import { Agent } from "../agent";
+import { AssetManager, TextureAsset } from "../asset-manager";
+import { Grid } from "../grid";
+import { GridBuilder, GridSchema } from "../grid-builder";
 import { WanderGoal } from "./wander-goal";
-import { GridBuilder, GridSchema } from "./grid-builder";
 
 export class WanderExperiment {
   group = new THREE.Group(); // Everything this experiment creates is placed in here
@@ -18,9 +18,9 @@ export class WanderExperiment {
     // Build the grid for this experiment
     const schema: GridSchema = [
       ["floor", "floor", "floor", "floor", "floor", "floor", "floor", "floor"],
-      ["floor", "floor", "void", "void", "void", "floor", "floor", "void"],
-      ["floor", "floor", "floor", "floor", "floor", "floor", "floor", "floor"],
-      ["floor", "floor", "void", "void", "void", "floor", "floor", "void"],
+      ["floor", "void", "void", "void", "floor", "floor", "floor", "void"],
+      ["floor", "floor", "floor", "floor", "floor", "void", "floor", "floor"],
+      ["floor", "void", "void", "void", "floor", "floor", "floor", "void"],
       ["floor", "floor", "floor", "floor", "floor", "floor", "floor", "floor"],
     ];
     this.grid = this.gridBuilder.buildGrid(schema);

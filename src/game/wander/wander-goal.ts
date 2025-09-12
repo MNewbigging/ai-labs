@@ -1,4 +1,4 @@
-import { Goal } from "./goal";
+import { Goal } from "../goal";
 
 export class WanderGoal extends Goal {
   private idleTimer = 0;

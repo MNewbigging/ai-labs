@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { GridCellType } from "./grid-builder";
 
 export interface GridCell {
-  object?: THREE.Object3D;
+  object: THREE.Object3D;
   type: GridCellType;
   rowIndex: number;
   cellIndex: number;
@@ -162,9 +162,6 @@ export class Grid {
   }
 
   private calculateCosts(current: PathNode, previous: PathNode, end: PathNode) {
-    if (!current.object) return;
-    if (!end.object) return;
-
     current.costFromStart = previous.costFromStart + 1;
     current.costToEnd = current.object.position.distanceToSquared(
       end.object.position
@@ -174,8 +171,5 @@ export class Grid {
 }
 
 function gridCellsAreEqual(a: GridCell, b: GridCell) {
-  if (!a.object) return false;
-  if (!b.object) return false;
-
   return a.object.position.equals(b.object.position);
 }

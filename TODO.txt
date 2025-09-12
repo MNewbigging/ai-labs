@@ -1,1 +1,16 @@
-- empty grid spaces that are not part of pathfinding
+
+
+Experiment Ideas:
+
+- Find paths between a series of waypoints
+
+- Search for item, pick it up
+
+
+Grid / cell ideas:
+
+- cells that affect position of model (teleport, conveyor, inc/decrease speed)
+
+- jumping over gaps
+
+- stairs

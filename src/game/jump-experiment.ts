@@ -19,7 +19,10 @@ export class JumpExperiment {
     this.grid = gridBuilder.buildGrid(schema);
     this.group.add(this.grid.group);
 
+    const firstCell = this.grid.cells[0][0];
+
     this.agent = new Agent(this.grid, assetManager);
+    this.agent.positionOnCell(firstCell);
     this.group.add(this.agent.model);
   }
 

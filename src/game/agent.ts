@@ -36,6 +36,7 @@ export class Agent {
 
     this.mixer = new THREE.AnimationMixer(this.model);
     this.setupAnimations();
+    this.playAnimation(AnimationAsset.Idle);
   }
 
   positionOnCell(cell: GridCell) {

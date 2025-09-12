@@ -4,6 +4,7 @@ import { RenderPipeline } from "./render-pipeline";
 import { AssetManager } from "./asset-manager";
 import { WanderExperiment } from "./wander/wander-experiment";
 import { GridBuilder } from "./grid-builder";
+import { JumpExperiment } from "./jump-experiment";
 
 export class GameState {
   private renderPipeline: RenderPipeline;
@@ -16,6 +17,7 @@ export class GameState {
 
   private gridBuilder: GridBuilder;
   private wanderExperiment: WanderExperiment;
+  private jumpExperiment: JumpExperiment;
 
   constructor(private assetManager: AssetManager) {
     this.setupCamera();
@@ -41,7 +43,13 @@ export class GameState {
       this.gridBuilder,
       this.assetManager
     );
-    this.scene.add(this.wanderExperiment.group); // this experiment is active by default so add it now
+
+    this.jumpExperiment = new JumpExperiment(
+      this.gridBuilder,
+      this.assetManager
+    );
+
+    this.scene.add(this.jumpExperiment.group); // this experiment is active by default so add it now
 
     // Start game
     this.update();
@@ -69,7 +77,7 @@ export class GameState {
 
     this.controls.update();
 
-    this.wanderExperiment.update(dt);
+    this.jumpExperiment.update(dt);
 
     this.renderPipeline.render(dt);
   };

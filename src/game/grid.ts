@@ -133,22 +133,87 @@ export class Grid {
   getNeighbours(cell: GridCell) {
     const neighbours: GridCell[] = [];
 
-    const rowCount = this.cells.length;
-    const cellCount = this.cells[0].length; // all rows same width
+    const upper = this.getUpperNeighbour(cell);
+    if (upper) neighbours.push(upper);
 
-    const rowUp = cell.rowIndex - 1;
-    const rowDown = cell.rowIndex + 1;
-    const cellLeft = cell.cellIndex - 1;
-    const cellRight = cell.cellIndex + 1;
+    const lower = this.getLowerNeighbour(cell);
+    if (lower) neighbours.push(lower);
 
-    if (rowUp >= 0) neighbours.push(this.cells[rowUp][cell.cellIndex]);
-    if (rowDown < rowCount)
-      neighbours.push(this.cells[rowDown][cell.cellIndex]);
-    if (cellLeft >= 0) neighbours.push(this.cells[cell.rowIndex][cellLeft]);
-    if (cellRight < cellCount)
-      neighbours.push(this.cells[cell.rowIndex][cellRight]);
+    const left = this.getLeftNeighbour(cell);
+    if (left) neighbours.push(left);
+
+    const right = this.getRightNeighbour(cell);
+    if (right) neighbours.push(right);
 
     return neighbours;
+  }
+
+  getUpperNeighbour(cell: GridCell) {
+    const oneRowUp = cell.rowIndex - 1;
+
+    if (oneRowUp < 0) return undefined;
+
+    const oneUpCell = this.cells[oneRowUp][cell.cellIndex];
+
+    // If there is something there, return it
+    if (oneUpCell.type !== "void") return oneUpCell;
+
+    // Otherwise, check one step further since a gap of 1 is jumpable
+    const twoRowsUp = cell.rowIndex - 2;
+
+    if (twoRowsUp < 0) return undefined;
+
+    return this.cells[twoRowsUp][cell.cellIndex];
+  }
+
+  getLowerNeighbour(cell: GridCell) {
+    const oneRowDown = cell.rowIndex + 1;
+
+    if (oneRowDown >= this.cells.length) return undefined;
+
+    const oneDownCell = this.cells[oneRowDown][cell.cellIndex];
+
+    // If there is something there, return it
+    if (oneDownCell.type !== "void") return oneDownCell;
+
+    // Otherwise, check one step further since a gap of 1 is jumpable
+    const twoRowsDown = cell.rowIndex + 2;
+
+    if (twoRowsDown >= this.cells.length) return undefined;
+
+    return this.cells[twoRowsDown][cell.cellIndex];
+  }
+
+  getLeftNeighbour(cell: GridCell) {
+    const oneCellLeft = cell.cellIndex - 1;
+
+    if (oneCellLeft < 0) return undefined;
+
+    const oneLeftCell = this.cells[cell.rowIndex][oneCellLeft];
+
+    if (oneLeftCell.type !== "void") return oneLeftCell;
+
+    const twoCellsLeft = cell.cellIndex - 2;
+
+    if (twoCellsLeft < 0) return undefined;
+
+    return this.cells[cell.rowIndex][twoCellsLeft];
+  }
+
+  getRightNeighbour(cell: GridCell) {
+    const oneCellRight = cell.cellIndex + 1;
+
+    if (oneCellRight >= this.cells[0].length) return undefined;
+
+    const oneRightCell = this.cells[cell.rowIndex][oneCellRight];
+
+    if (oneRightCell.type !== "void") return oneRightCell;
+
+    const twoCellsRight = cell.cellIndex + 2;
+
+    if (twoCellsRight >= this.cells[0].length) return undefined;
+
+    return this.cells[cell.rowIndex][twoCellsRight];
   }
 
   private asPathNode(cell: GridCell): PathNode {

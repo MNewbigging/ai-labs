@@ -3,7 +3,7 @@ import { Agent } from "./agent";
 import { GridCell } from "./grid";
 import { AnimationAsset } from "./asset-manager";
 
-// Follows a path
+// A path is an array of grid cells which are all neighbouring
 export class FollowPathBehaviour {
   currentCell?: GridCell;
   nextCell?: GridCell;

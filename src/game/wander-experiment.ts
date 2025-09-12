@@ -1,14 +1,9 @@
 import * as THREE from "three";
 import { AssetManager, TextureAsset } from "./asset-manager";
-import { Grid, GridSchema } from "./grid";
+import { Grid } from "./grid";
 import { Agent } from "./agent";
 import { WanderGoal } from "./wander-goal";
-
-/**
- * Wander:
- * - 10x10 grid, a few random obstacles (need to make sure all cells are reachable)
- * - 1 agent in each corner
- */
+import { GridBuilder, GridSchema } from "./grid-builder";
 
 export class WanderExperiment {
   group = new THREE.Group(); // Everything this experiment creates is placed in here
@@ -16,7 +11,10 @@ export class WanderExperiment {
   private grid: Grid;
   private agents: Agent[] = [];
 
-  constructor(assetManager: AssetManager) {
+  constructor(
+    private gridBuilder: GridBuilder,
+    private assetManager: AssetManager
+  ) {
     // Build the grid for this experiment
     const schema: GridSchema = [
       ["floor", "floor", "floor", "floor", "floor"],
@@ -25,7 +23,7 @@ export class WanderExperiment {
       ["floor", "floor", "floor", "floor", "floor"],
       ["floor", "floor", "floor", "floor", "floor"],
     ];
-    this.grid = new Grid(schema, assetManager);
+    this.grid = this.gridBuilder.buildGrid(schema);
     this.group.add(this.grid.group);
 
     // Create the agents
@@ -45,7 +43,6 @@ export class WanderExperiment {
   }
 
   dispose() {
-    this.grid.dispose();
     this.agents.forEach((agent) => agent.dispose());
   }
 

@@ -3,6 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RenderPipeline } from "./render-pipeline";
 import { AssetManager } from "./asset-manager";
 import { WanderExperiment } from "./wander-experiment";
+import { GridBuilder } from "./grid-builder";
 
 export class GameState {
   private renderPipeline: RenderPipeline;
@@ -13,6 +14,7 @@ export class GameState {
   private camera = new THREE.PerspectiveCamera();
   private controls: OrbitControls;
 
+  private gridBuilder: GridBuilder;
   private wanderExperiment: WanderExperiment;
 
   constructor(private assetManager: AssetManager) {
@@ -33,7 +35,12 @@ export class GameState {
 
     //
 
-    this.wanderExperiment = new WanderExperiment(this.assetManager);
+    this.gridBuilder = new GridBuilder(assetManager);
+
+    this.wanderExperiment = new WanderExperiment(
+      this.gridBuilder,
+      this.assetManager
+    );
     this.scene.add(this.wanderExperiment.group); // this experiment is active by default so add it now
 
     // Start game

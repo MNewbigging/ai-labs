@@ -1,10 +1,5 @@
 import * as THREE from "three";
-import { AssetManager, TextureAsset } from "./asset-manager";
-
-export type GridCellType = "floor";
-
-// Variable rows, all rows must have same number of cells
-export type GridSchema = GridCellType[][];
+import { GridCellType } from "./grid-builder";
 
 export interface GridCell {
   object: THREE.Object3D; // todo might not be an object for empty cell spaces, add position prop here later
@@ -23,33 +18,10 @@ interface PathNode extends GridCell {
 
 export class Grid {
   group = new THREE.Group();
-  cells: GridCell[][];
 
-  // If this class is recreated, these should be elsewhere (asset mgr maybe? too high level...)
-  // Different grids will require differnet geoms/mats, so should they all live here or be given?
-  private floorMaterial: THREE.MeshLambertMaterial;
-  private floorGeometry: THREE.BoxGeometry;
-
-  constructor(public schema: GridSchema, private assetManager: AssetManager) {
-    // Setup stuff used to render grid in the scene
-    this.floorMaterial = new THREE.MeshLambertMaterial({
-      map: this.assetManager.textures.get(TextureAsset.PrototypeBlack),
-    });
-
-    this.floorGeometry = new THREE.BoxGeometry();
-    this.floorGeometry.translate(0, -0.5, 0); // so top of box is at floor level
-
-    // Create the grid cells according to given schema
-    this.cells = this.buildGridCells(schema);
-    // Add all cells into the group to easily add/remove
-    this.cells.forEach((row) =>
-      row.forEach((cell) => this.group.add(cell.object))
-    );
-  }
-
-  dispose() {
-    this.floorMaterial.dispose();
-    this.floorGeometry.dispose();
+  constructor(public cells: GridCell[][]) {
+    // For easily adding/removing to/from scene
+    cells.forEach((row) => row.forEach((cell) => this.group.add(cell.object)));
   }
 
   // Make into object if props increase
@@ -188,38 +160,6 @@ export class Grid {
       end.object.position
     );
     current.costTotal = current.costFromStart + current.costToEnd;
-  }
-
-  private buildGridCells(schema: GridSchema) {
-    const gridCells: GridCell[][] = [];
-
-    for (let rowIndex = 0; rowIndex < schema.length; rowIndex++) {
-      // Schema types for this row
-      const rowTypes = schema[rowIndex];
-      // Completed cells for this row
-      const cellRow: GridCell[] = [];
-
-      for (let cellIndex = 0; cellIndex < rowTypes.length; cellIndex++) {
-        // Schema for this cell
-        const type = rowTypes[cellIndex];
-        // Completed cell
-        const object = this.createCellOfType(type);
-        object.position.set(cellIndex, 0, rowIndex);
-        cellRow.push({ type, object, rowIndex, cellIndex });
-      }
-
-      // Now that the row is finished, add it to grid cells
-      gridCells.push(cellRow);
-    }
-
-    return gridCells;
-  }
-
-  private createCellOfType(type: GridCellType) {
-    switch (type) {
-      case "floor":
-        return new THREE.Mesh(this.floorGeometry, this.floorMaterial);
-    }
   }
 }
 

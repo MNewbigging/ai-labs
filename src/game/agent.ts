@@ -40,6 +40,9 @@ export class Agent {
 
   positionOnCell(cell: GridCell) {
     this.followPathBehaviour.currentCell = cell;
+    if (cell.object) {
+      this.model.position.copy(cell.object.position);
+    }
   }
 
   dispose() {

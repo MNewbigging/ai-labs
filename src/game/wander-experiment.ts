@@ -17,11 +17,11 @@ export class WanderExperiment {
   ) {
     // Build the grid for this experiment
     const schema: GridSchema = [
-      ["floor", "floor", "floor", "floor", "floor"],
-      ["floor", "floor", "floor", "floor", "floor"],
-      ["floor", "floor", "floor", "floor", "floor"],
-      ["floor", "void", "void", "floor", "floor"],
-      ["floor", "floor", "floor", "floor", "floor"],
+      ["floor", "floor", "floor", "floor", "floor", "floor", "floor", "floor"],
+      ["floor", "floor", "void", "void", "void", "floor", "floor", "void"],
+      ["floor", "floor", "floor", "floor", "floor", "floor", "floor", "floor"],
+      ["floor", "floor", "void", "void", "void", "floor", "floor", "void"],
+      ["floor", "floor", "floor", "floor", "floor", "floor", "floor", "floor"],
     ];
     this.grid = this.gridBuilder.buildGrid(schema);
     this.group.add(this.grid.group);
@@ -35,11 +35,16 @@ export class WanderExperiment {
     ].forEach((colour) => {
       const agent = new Agent(this.grid, assetManager, colour);
       agent.brain.assignGoal(new WanderGoal(agent));
-      agent.positionOnCell(this.grid.cells[0][0]); // better way of doing this?
       this.group.add(agent.model);
 
       this.agents.push(agent);
     });
+
+    // gross
+    this.agents[0].positionOnCell(this.grid.cells[0][0]);
+    this.agents[1].positionOnCell(this.grid.cells[0][6]);
+    this.agents[2].positionOnCell(this.grid.cells[4][0]);
+    this.agents[3].positionOnCell(this.grid.cells[4][6]);
   }
 
   dispose() {

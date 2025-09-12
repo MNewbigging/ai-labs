@@ -50,7 +50,7 @@ export class GameState {
   private setupCamera() {
     this.camera.fov = 75;
     this.camera.far = 500;
-    this.camera.position.set(0, 1.5, 3);
+    this.camera.position.set(0, 5, 15);
   }
 
   private setupLights() {

@@ -21,7 +21,7 @@ export class Agent {
 
   constructor(public grid: Grid, private assetManager: AssetManager) {
     this.model = assetManager.getModel(ModelAsset.Dummy);
-    assetManager.applyModelTexture(this.model, TextureAsset.Dummy);
+    assetManager.applyModelTexture(this.model, TextureAsset.DummyRed);
 
     this.brain = new Brain();
 

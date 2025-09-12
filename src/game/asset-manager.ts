@@ -15,7 +15,10 @@ export enum ModelAsset {
 
 export enum TextureAsset {
   PrototypeBlack = "texture_06_black.png",
-  Dummy = "T_Polygon_Dummy_01.png",
+  DummyGreen = "dummy_green.png",
+  DummyBlue = "dummy_blue.png",
+  DummyYellow = "dummy_yellow.png",
+  DummyRed = "dummy_red.png",
 }
 
 export class AssetManager {
@@ -75,14 +78,8 @@ export class AssetManager {
   }
 
   private loadTextures() {
-    this.loadTexture(
-      TextureAsset.Dummy,
-      (texture) => (texture.colorSpace = THREE.SRGBColorSpace)
-    );
-
-    this.loadTexture(
-      TextureAsset.PrototypeBlack,
-      (texture) => (texture.colorSpace = THREE.SRGBColorSpace)
+    Object.values(TextureAsset).forEach((filename) =>
+      this.loadTexture(filename)
     );
   }
 
@@ -118,10 +115,7 @@ export class AssetManager {
     });
   }
 
-  private loadTexture(
-    filename: TextureAsset,
-    onLoad?: (texture: THREE.Texture) => void
-  ) {
+  private loadTexture(filename: TextureAsset) {
     const path = `${getPathPrefix()}/textures/${filename}`;
     const url = getUrl(path);
 
@@ -129,7 +123,7 @@ export class AssetManager {
     const loader = filetype === "png" ? this.textureLoader : this.rgbeLoader;
 
     loader.load(url, (texture) => {
-      onLoad?.(texture);
+      texture.colorSpace = THREE.SRGBColorSpace;
       this.textures.set(filename, texture);
     });
   }

@@ -9,7 +9,12 @@ export class FollowPathBehaviour {
   nextCell?: GridCell;
   path: GridCell[] = [];
 
+  private moveSpeed = 1.5;
+  private turnSpeed = 8;
+
   private direction = new THREE.Vector3();
+  private rotationMatrix = new THREE.Matrix4();
+  private targetQuaternion = new THREE.Quaternion();
 
   constructor(public agent: Agent) {}
 
@@ -18,6 +23,14 @@ export class FollowPathBehaviour {
 
     this.path = path;
     this.nextCell = this.path.shift();
+
+    if (this.nextCell) {
+      const nextPos = this.nextCell.object.position;
+      const model = this.agent.model;
+      this.rotationMatrix.lookAt(nextPos, model.position, model.up);
+      this.targetQuaternion.setFromRotationMatrix(this.rotationMatrix);
+    }
+
     this.agent.playAnimation(AnimationAsset.Walk);
   }
 
@@ -28,6 +41,12 @@ export class FollowPathBehaviour {
       this.currentCell = this.nextCell;
       this.nextCell = this.path.shift();
       if (!this.nextCell) this.agent.playAnimation(AnimationAsset.Idle);
+      else {
+        const nextPos = this.nextCell.object.position;
+        const model = this.agent.model;
+        this.rotationMatrix.lookAt(nextPos, model.position, model.up);
+        this.targetQuaternion.setFromRotationMatrix(this.rotationMatrix);
+      }
 
       return;
     }
@@ -37,11 +56,13 @@ export class FollowPathBehaviour {
     const cellPosition = this.nextCell.object.position.clone();
     this.direction = cellPosition.sub(model.position).normalize();
 
-    const moveStep = this.direction.clone().multiplyScalar(dt * 2);
+    const moveStep = this.direction.clone().multiplyScalar(dt * this.moveSpeed);
     const nextPos = model.position.clone().add(moveStep);
-
-    model.lookAt(nextPos);
     model.position.copy(nextPos);
+
+    model.quaternion.rotateTowards(this.targetQuaternion, dt * this.turnSpeed);
+
+    // model.lookAt(nextPos);
   }
 
   private hasReachedCell(cell: GridCell): boolean {

@@ -9,7 +9,7 @@ export class FollowPathBehaviour {
   nextCell?: GridCell;
   path: GridCell[] = [];
 
-  private moveSpeed = 1.5;
+  private moveSpeed = 1.8;
   private turnSpeed = 8;
 
   private direction = new THREE.Vector3();
@@ -22,14 +22,7 @@ export class FollowPathBehaviour {
     if (!path.length) return;
 
     this.path = path;
-    this.nextCell = this.path.shift();
-
-    if (this.nextCell) {
-      const nextPos = this.nextCell.object.position;
-      const model = this.agent.model;
-      this.rotationMatrix.lookAt(nextPos, model.position, model.up);
-      this.targetQuaternion.setFromRotationMatrix(this.rotationMatrix);
-    }
+    this.setNextCell();
 
     this.agent.playAnimation(AnimationAsset.Walk);
   }
@@ -39,14 +32,8 @@ export class FollowPathBehaviour {
 
     if (this.hasReachedCell(this.nextCell)) {
       this.currentCell = this.nextCell;
-      this.nextCell = this.path.shift();
+      this.setNextCell();
       if (!this.nextCell) this.agent.playAnimation(AnimationAsset.Idle);
-      else {
-        const nextPos = this.nextCell.object.position;
-        const model = this.agent.model;
-        this.rotationMatrix.lookAt(nextPos, model.position, model.up);
-        this.targetQuaternion.setFromRotationMatrix(this.rotationMatrix);
-      }
 
       return;
     }
@@ -57,12 +44,9 @@ export class FollowPathBehaviour {
     this.direction = cellPosition.sub(model.position).normalize();
 
     const moveStep = this.direction.clone().multiplyScalar(dt * this.moveSpeed);
-    const nextPos = model.position.clone().add(moveStep);
-    model.position.copy(nextPos);
+    model.position.add(moveStep);
 
     model.quaternion.rotateTowards(this.targetQuaternion, dt * this.turnSpeed);
-
-    // model.lookAt(nextPos);
   }
 
   private hasReachedCell(cell: GridCell): boolean {
@@ -70,5 +54,17 @@ export class FollowPathBehaviour {
     const currentPos = this.agent.model.position.clone();
 
     return cellPos.distanceTo(currentPos) < 0.01;
+  }
+
+  private setNextCell() {
+    this.nextCell = this.path.shift();
+
+    if (!this.nextCell) return;
+
+    // Update target rotation on new target
+    const nextPos = this.nextCell.object.position;
+    const model = this.agent.model;
+    this.rotationMatrix.lookAt(nextPos, model.position, model.up);
+    this.targetQuaternion.setFromRotationMatrix(this.rotationMatrix);
   }
 }

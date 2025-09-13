@@ -1,4 +1,9 @@
 
+Design thoughts:
+
+- Test how it could work without using a square grid; factory methods create 'nodes' of various types like
+  floor, stair, pillar etc. Then we derive the astar path nodes from those 3d node objects. 
+
 
 Experiment Ideas:
 

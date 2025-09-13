@@ -20,7 +20,7 @@ export class Agent extends AnimatedModel {
 
     this.followPathBehaviour = new FollowPathBehaviour(this);
 
-    this.playAnimation(AnimationAsset.Idle);
+    this.playAnimation(AnimationAsset.Jump);
   }
 
   positionOnCell(cell: GridCell) {

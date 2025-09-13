@@ -1,10 +1,5 @@
 import * as THREE from "three";
-import {
-  AnimationAsset,
-  AssetManager,
-  ModelAsset,
-  TextureAsset,
-} from "./asset-manager";
+import { AssetManager, TextureAsset } from "./asset-manager";
 import { Grid } from "./grid";
 import { GridBuilder, GridSchema } from "./grid-builder";
 import { Agent } from "./agent";
@@ -29,10 +24,19 @@ export class JumpExperiment {
     const clips = this.assetManager.getDummyClips();
 
     this.agent = new Agent(this.grid, model, clips);
-
-    const firstCell = this.grid.cells[0][0];
-    this.agent.positionOnCell(firstCell);
     this.group.add(this.agent.model);
+
+    const cellRow = this.grid.cells[0];
+
+    const firstCell = cellRow[0];
+    const lastCell = cellRow[cellRow.length - 1];
+
+    this.agent.positionOnCell(firstCell);
+
+    const path = this.grid.getPath(firstCell, lastCell);
+    console.log("path", path);
+
+    //if (path) this.agent.followPathBehaviour.setPath(path);
   }
 
   update(dt: number) {

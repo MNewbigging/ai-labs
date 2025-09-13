@@ -76,3 +76,13 @@ export class GridBuilder {
     }
   }
 }
+
+/**
+ * Is this the best way of creating grids? I thought it would be handy to use the schema, but it's
+ * actually somewhat difficult since it's square. Would it be better some other way?
+ *
+ * - Manual creation. Each experiment manually creates cells via factory functions. Then the path nodes
+ *   are created by reading what gets made this way?
+ *   - Would mean it's a little harder to visualise what a level looks like from reading code, schema does
+ *     read somewhat nicer.
+ */

@@ -148,9 +148,14 @@ export class Grid {
     return neighbours;
   }
 
+  // I think voids should still be part of the path if they are being jumped over
+  // Might need to rethink the 'traversible' property on grid cells...
+  // If I didn't make square grids, voids wouldn't exist so the getNeighbour would need to work by
+  // checking distances to nearby cells.
   getUpperNeighbour(cell: GridCell) {
     const oneRowUp = cell.rowIndex - 1;
 
+    // Already at the top of the grid
     if (oneRowUp < 0) return undefined;
 
     const oneUpCell = this.cells[oneRowUp][cell.cellIndex];

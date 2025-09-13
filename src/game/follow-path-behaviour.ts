@@ -21,7 +21,7 @@ export class FollowPathBehaviour {
   setPath(path: GridCell[]) {
     if (!path.length) return;
 
-    this.path = path;
+    this.path = [...path];
     this.setNextCell();
 
     this.agent.playAnimation(AnimationAsset.Walk);
@@ -46,6 +46,7 @@ export class FollowPathBehaviour {
     const moveStep = this.direction.clone().multiplyScalar(dt * this.moveSpeed);
     model.position.add(moveStep);
 
+    // Turn to face next cell
     model.quaternion.rotateTowards(this.targetQuaternion, dt * this.turnSpeed);
   }
 
@@ -66,5 +67,22 @@ export class FollowPathBehaviour {
     const model = this.agent.model;
     this.rotationMatrix.lookAt(nextPos, model.position, model.up);
     this.targetQuaternion.setFromRotationMatrix(this.rotationMatrix);
+
+    // If the next cell is more than 1 unit away, start jumping
+    // Should really read: if a void separates this and next cell, start jumping
+    // Could be done if the void was part of the path
+
+    /**
+     * How should this class determine which method/animation to use to get to the next cell?
+     *
+     * - Always moving from one cell to the next; i.e a cell 'transition'
+     * - Each transition falls under one method of travel; walk, jump, climb etc
+     * - Each method has a set distance; usually 1 cell, but jump does 2 cells
+     * - Agent decides transition based on the next cell type?
+     * -- For jump: next cell is void, get cell after that to know where to jump towards.
+     *
+     * - Should a transition be a typed property of the class? So we just update the current transition?
+     * -- Then I could write transitions in isolation that take the start/end/path?
+     */
   }
 }

@@ -5,6 +5,8 @@ import { AssetManager } from "./asset-manager";
 import { WanderExperiment } from "./wander/wander-experiment";
 import { GridBuilder } from "./grid-builder";
 import { JumpExperiment } from "./jump-experiment";
+import { NodeFactory } from "./node-factory";
+import { NodeExperiment } from "./node-experiment";
 
 export class GameState {
   private renderPipeline: RenderPipeline;
@@ -15,9 +17,11 @@ export class GameState {
   private camera = new THREE.PerspectiveCamera();
   private controls: OrbitControls;
 
+  private nodeFactory: NodeFactory;
   private gridBuilder: GridBuilder;
   private wanderExperiment: WanderExperiment;
   private jumpExperiment: JumpExperiment;
+  private nodeExperiment: NodeExperiment;
 
   constructor(private assetManager: AssetManager) {
     this.setupCamera();
@@ -36,7 +40,7 @@ export class GameState {
     window.addEventListener("focus", this.onGainFocus);
 
     //
-
+    this.nodeFactory = new NodeFactory(assetManager);
     this.gridBuilder = new GridBuilder(assetManager);
 
     this.wanderExperiment = new WanderExperiment(
@@ -49,7 +53,9 @@ export class GameState {
       this.assetManager
     );
 
-    this.scene.add(this.jumpExperiment.group); // this experiment is active by default so add it now
+    this.nodeExperiment = new NodeExperiment(this.nodeFactory);
+
+    this.scene.add(this.nodeExperiment.group); // this experiment is active by default so add it now
 
     // Start game
     this.update();

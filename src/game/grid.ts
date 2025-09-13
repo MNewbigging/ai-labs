@@ -12,8 +12,8 @@ export interface GridCell {
 type Direction = "left" | "right" | "up" | "down";
 
 // Used in a-star pathfinding only
-// Maybe this should not extend but have a prop for the cell...
-interface PathNode extends GridCell {
+interface PathNode {
+  cell: GridCell;
   parent?: PathNode;
   direction?: Direction;
   costFromStart: number;
@@ -56,14 +56,14 @@ export class Grid {
 
     // Create path nodes from the given cells
     const start: PathNode = {
-      ...fromCell,
+      cell: fromCell,
       parent: undefined,
       costFromStart: 0,
       costToEnd: 0,
       costTotal: 0,
     };
     const end: PathNode = {
-      ...toCell,
+      cell: toCell,
       parent: undefined,
       costFromStart: 0,
       costToEnd: 0,
@@ -93,7 +93,7 @@ export class Grid {
 
         route.reverse();
 
-        return route as GridCell[];
+        return route.map((node) => node.cell);
       }
 
       // Move the current node from open list to closed list
@@ -107,7 +107,7 @@ export class Grid {
       for (const neighbour of neighbours) {
         // If this node isn't traversible or already explored, ignore it
         if (
-          !neighbour.traversible ||
+          !neighbour.cell.traversible ||
           closedList.some((node) => gridCellsAreEqual(node, neighbour))
         ) {
           continue;
@@ -139,19 +139,19 @@ export class Grid {
     return undefined;
   }
 
-  getNeighbours(cell: GridCell) {
+  getNeighbours(node: PathNode) {
     const neighbours: GridCell[] = [];
 
-    const upper = this.getUpperNeighbour(cell);
+    const upper = this.getUpperNeighbour(node.cell);
     if (upper) neighbours.push(upper);
 
-    const lower = this.getLowerNeighbour(cell);
+    const lower = this.getLowerNeighbour(node.cell);
     if (lower) neighbours.push(lower);
 
-    const left = this.getLeftNeighbour(cell);
+    const left = this.getLeftNeighbour(node.cell);
     if (left) neighbours.push(left);
 
-    const right = this.getRightNeighbour(cell);
+    const right = this.getRightNeighbour(node.cell);
     if (right) neighbours.push(right);
 
     return neighbours;
@@ -247,7 +247,7 @@ export class Grid {
 
   private asPathNode(cell: GridCell): PathNode {
     return {
-      ...cell,
+      cell,
       costFromStart: 0,
       costToEnd: 0,
       costTotal: 0,
@@ -261,8 +261,8 @@ export class Grid {
     end: PathNode
   ) {
     neighbour.costFromStart = previous.costFromStart + 1;
-    neighbour.costToEnd = neighbour.object.position.distanceToSquared(
-      end.object.position
+    neighbour.costToEnd = neighbour.cell.object.position.distanceToSquared(
+      end.cell.object.position
     );
     neighbour.costTotal = neighbour.costFromStart + neighbour.costToEnd;
   }
@@ -295,6 +295,6 @@ export class Grid {
   }
 }
 
-function gridCellsAreEqual(a: GridCell, b: GridCell) {
-  return a.object.id === b.object.id;
+function gridCellsAreEqual(a: PathNode, b: PathNode) {
+  return a.cell.object.id === b.cell.object.id;
 }

@@ -1,8 +1,4 @@
 
-Design thoughts:
-
-- Test how it could work without using a square grid; factory methods create 'nodes' of various types like
-  floor, stair, pillar etc. Then we derive the astar path nodes from those 3d node objects. 
 
 
 Experiment Ideas:
@@ -12,6 +8,7 @@ Experiment Ideas:
 - Search for item, pick it up
 
 
+
 Grid / cell ideas:
 
 - cells that affect position of model (teleport, conveyor, inc/decrease speed)
@@ -19,3 +16,12 @@ Grid / cell ideas:
 - jumping over gaps
 
 - stairs
+
+
+
+Design thoughts:
+
+- Test how it could work without using a grid; factory methods create 'nodes' of various types like
+  floor, stair, pillar etc. Then we derive the astar path nodes from those 3d node objects. 
+  -- How do I work out when to jump to the next node?
+  -- How would I work out neighbouring nodes? 

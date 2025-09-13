@@ -2,6 +2,9 @@
 - New rules for floor and voids in getNeighbours/getPath logic which uses directionality to check validity
 
 
+- Need a better jump landing animation
+
+
 Experiment Ideas:
 
 - Find paths between a series of waypoints

@@ -32,8 +32,6 @@ export class JumpExperiment {
     const firstCell = cellRow[0];
     const lastCell = cellRow[cellRow.length - 1];
 
-    this.agent.positionOnCell(firstCell);
-
     const path = getPath(firstCell, lastCell, this.grid.cells);
     console.log("path", path);
 

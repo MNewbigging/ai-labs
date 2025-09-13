@@ -183,6 +183,9 @@ function getPathFromEndNode(endNode: PathNode) {
     current = current.parent;
   }
 
+  // Start won't have a parent so it won't get included in while loop
+  route.push(current);
+
   route.reverse();
 
   return route.map((node) => node.cell);

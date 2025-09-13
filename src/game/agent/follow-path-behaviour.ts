@@ -1,20 +1,20 @@
-import * as THREE from "three";
 import { Agent } from "./agent";
 import { AnimationAsset } from "../asset-manager";
 import { GridCell } from "../grid/grid";
+import {
+  CellTransition,
+  JumpTransition,
+  WalkTransition,
+} from "./cell-transitions";
 
 // A path is an array of grid cells which are all neighbouring
 export class FollowPathBehaviour {
   currentCell?: GridCell;
-  nextCell?: GridCell;
   path: GridCell[] = [];
 
-  private moveSpeed = 1.8;
-  private turnSpeed = 7.2;
+  private currentTransition?: CellTransition;
 
-  private direction = new THREE.Vector3();
-  private rotationMatrix = new THREE.Matrix4();
-  private targetQuaternion = new THREE.Quaternion();
+  private startTimer = 0;
 
   constructor(public agent: Agent) {}
 
@@ -22,105 +22,76 @@ export class FollowPathBehaviour {
     if (!path.length) return;
 
     this.path = [...path];
-    this.setNextCell();
 
-    this.agent.playAnimation(AnimationAsset.Walk);
+    // Position at the start of the path
+    const start = this.path.shift();
+    if (!start) return;
+
+    this.agent.positionOnCell(start);
+
+    this.setNextTransition();
   }
 
   update(dt: number) {
-    if (!this.currentCell || !this.nextCell) return;
+    if (!this.currentTransition) return;
 
-    if (this.hasReachedCell(this.nextCell)) {
-      this.currentCell = this.nextCell;
-      this.setNextCell();
-      if (!this.nextCell) this.agent.playAnimation(AnimationAsset.Idle);
+    this.currentTransition.update(dt);
 
+    if (this.currentTransition.isFinished()) {
+      this.currentCell = this.currentTransition.endCell;
+
+      if (this.isPathFinished()) {
+        this.onFinishPath();
+      } else {
+        this.setNextTransition();
+      }
+    }
+  }
+
+  private setNextTransition() {
+    // if (this.startTimer) {
+    //   const took = performance.now() - this.startTimer;
+    //   console.log("last transition took", took);
+    // }
+
+    // this.startTimer = performance.now();
+
+    // Start is always current cell
+    const start = this.currentCell;
+    if (!start) {
+      console.error(
+        "Must have a current cell before starting a new transition"
+      );
       return;
     }
 
-    // Keep moving towards the target cell
-    const model = this.agent.model;
-    const cellPosition = this.nextCell.object.position.clone();
-    this.direction = cellPosition.sub(model.position).normalize();
+    // End is next cell in the path
+    const end = this.path.shift();
+    if (!end) return;
 
-    const moveStep = this.direction.clone().multiplyScalar(dt * this.moveSpeed);
-    model.position.add(moveStep);
-
-    // Turn to face next cell
-    model.quaternion.rotateTowards(this.targetQuaternion, dt * this.turnSpeed);
-  }
-
-  private hasReachedCell(cell: GridCell): boolean {
-    const cellPos = cell.object.position.clone();
-    const currentPos = this.agent.model.position.clone();
-
-    return cellPos.distanceTo(currentPos) < 0.01;
-  }
-
-  private setNextCell() {
-    this.nextCell = this.path.shift();
-
-    if (!this.nextCell) return;
-
-    // Update target rotation on new target
-    const nextPos = this.nextCell.object.position;
-    const model = this.agent.model;
-    this.rotationMatrix.lookAt(nextPos, model.position, model.up);
-    this.targetQuaternion.setFromRotationMatrix(this.rotationMatrix);
-
-    /**
-     * Read the next cell's type to work out how to get there / what sort of transition we need
-     */
-
-    if (this.nextCell.type === "void") {
-      // We have to ignore this one and set next again
+    if (end.type === "floor") {
+      console.log("starting walk");
+      this.currentTransition = new WalkTransition(this.agent, start, end);
+      this.currentTransition.onStart();
     }
 
-    if (this.currentCell?.type === "floor") {
-      if (this.nextCell.type === "floor") {
-        // We just walk
-      }
-      if (this.nextCell.type === "void") {
-        // We jump - where? Void can determine direction
-        //
-      }
+    if (end.type === "void") {
+      // We don't actuall end on the void, but the next cell in the parth
+      const actualEnd = this.path.shift();
+      if (!actualEnd) return; // should never happen...
+
+      console.log("starting jump");
+      this.currentTransition = new JumpTransition(this.agent, start, actualEnd);
+      this.currentTransition.onStart();
     }
-
-    /**
-     * How should this class determine which method/animation to use to get to the next cell?
-     *
-     * - Always moving from one cell to the next; i.e a cell 'transition'
-     * - Each transition falls under one method of travel; walk, jump, climb etc
-     * - Each method has a set distance; usually 1 cell, but jump does 2 cells
-     * - Agent decides transition based on the next cell type?
-     * -- For jump: next cell is void, get cell after that to know where to jump towards.
-     *
-     * - Should a transition be a typed property of the class? So we just update the current transition?
-     * -- Then I could write transitions in isolation that take the start/end/path?
-     */
   }
-}
 
-abstract class CellTransition {
-  constructor(
-    public agent: Agent,
-    public startCell: GridCell,
-    public endCell: GridCell
-  ) {}
+  private isPathFinished() {
+    return this.path.length === 0;
+  }
 
-  abstract update(dt: number): void;
-}
-
-class WalkTransition extends CellTransition {
-  private direction = new THREE.Vector3();
-  private moveSpeed = 1.8;
-
-  update(dt: number): void {
-    const model = this.agent.model;
-    const cellPosition = this.endCell.object.position.clone();
-    this.direction = cellPosition.sub(model.position).normalize();
-
-    const moveStep = this.direction.clone().multiplyScalar(dt * this.moveSpeed);
-    model.position.add(moveStep);
+  private onFinishPath() {
+    this.currentTransition = undefined;
+    this.agent.playAnimation(AnimationAsset.Idle);
   }
 }

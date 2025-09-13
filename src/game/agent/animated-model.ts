@@ -6,12 +6,15 @@ export class AnimatedModel {
   private actions = new Map<string, THREE.AnimationAction>();
   private currentAction?: THREE.AnimationAction;
 
+  private timer = {
+    name: "",
+    start: 0,
+  };
+
   constructor(public model: THREE.Object3D, clips: THREE.AnimationClip[]) {
     this.mixer = new THREE.AnimationMixer(this.model);
-
-    clips.forEach((clip) =>
-      this.actions.set(clip.name, this.mixer.clipAction(clip))
-    );
+    this.mixer.addEventListener("finished", this.onAnimationFinish);
+    this.setupActions(clips);
   }
 
   update(dt: number) {
@@ -29,6 +32,14 @@ export class AnimatedModel {
       );
     }
 
+    if (this.timer.start) {
+      const took = performance.now() - this.timer.start;
+      console.log(`${this.timer.name} anim took ${took}`);
+    }
+
+    this.timer.name = name;
+    this.timer.start = performance.now();
+
     // Reset the next action then fade to it from the current action
     nextAction.reset().setEffectiveTimeScale(1).setEffectiveWeight(1);
 
@@ -39,4 +50,30 @@ export class AnimatedModel {
     // Next is now current
     this.currentAction = nextAction;
   }
+
+  private setupActions(clips: THREE.AnimationClip[]) {
+    clips.forEach((clip) => {
+      const action = this.mixer.clipAction(clip);
+
+      if (clip.name === AnimationAsset.JumpStart) {
+        action.setLoop(THREE.LoopOnce, 1);
+        action.clampWhenFinished = true;
+      } else if (clip.name === AnimationAsset.JumpEnd) {
+        action.setLoop(THREE.LoopOnce, 1);
+      }
+
+      this.actions.set(clip.name, action);
+    });
+  }
+
+  private onAnimationFinish = (event: { action: THREE.AnimationAction }) => {
+    const actionName = event.action.getClip().name as AnimationAsset;
+    console.log("finished anim " + actionName);
+
+    switch (actionName) {
+      case AnimationAsset.JumpStart:
+        this.playAnimation(AnimationAsset.JumpLoop);
+        break;
+    }
+  };
 }

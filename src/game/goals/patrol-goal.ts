@@ -17,7 +17,7 @@ export class Patrol extends Goal {
 
   update(dt: number): void {
     // If the agent has reached the end of the path
-    if (!this.agent.followPathBehaviour.nextCell) {
+    if (!this.agent.followPathBehaviour.path.length) {
       this.agent.followPathBehaviour.setPath(this.path.reverse());
     }
   }

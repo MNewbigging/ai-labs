@@ -67,7 +67,7 @@ export class FollowPathBehaviour {
     }
 
     if (end.type === "void") {
-      // We don't actually end on the void, but the next cell in the parth
+      // We don't actually end on the void, but the next cell in the path
       const actualEnd = this.path.shift();
       if (!actualEnd) return; // should never happen...
 

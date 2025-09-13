@@ -74,12 +74,6 @@ export class JumpTransition extends CellTransition {
       .sub(this.startCell.object.position);
     control.y = 0.8;
 
-    // const curve = new THREE.QuadraticBezierCurve3(
-    //   this.startCell.object.position,
-    //   control,
-    //   this.endCell.object.position
-    // );
-
     const start = this.startCell.object.position;
     const end = this.endCell.object.position;
     const mid = end.clone().sub(start).multiplyScalar(0.5).add(start);

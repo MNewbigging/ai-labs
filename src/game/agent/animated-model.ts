@@ -6,11 +6,6 @@ export class AnimatedModel {
   private actions = new Map<string, THREE.AnimationAction>();
   private currentAction?: THREE.AnimationAction;
 
-  private timer = {
-    name: "",
-    start: 0,
-  };
-
   constructor(public model: THREE.Object3D, clips: THREE.AnimationClip[]) {
     this.mixer = new THREE.AnimationMixer(this.model);
     this.mixer.addEventListener("finished", this.onAnimationFinish);
@@ -31,14 +26,6 @@ export class AnimatedModel {
         "Could not find action with name " + name + "for character " + this
       );
     }
-
-    if (this.timer.start) {
-      const took = performance.now() - this.timer.start;
-      console.log(`${this.timer.name} anim took ${took}`);
-    }
-
-    this.timer.name = name;
-    this.timer.start = performance.now();
 
     // Reset the next action then fade to it from the current action
     nextAction.reset().setEffectiveTimeScale(1).setEffectiveWeight(1);
@@ -68,7 +55,6 @@ export class AnimatedModel {
 
   private onAnimationFinish = (event: { action: THREE.AnimationAction }) => {
     const actionName = event.action.getClip().name as AnimationAsset;
-    console.log("finished anim " + actionName);
 
     switch (actionName) {
       case AnimationAsset.JumpStart:

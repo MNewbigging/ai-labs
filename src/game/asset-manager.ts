@@ -9,8 +9,7 @@ export enum AnimationAsset {
   Walk = "A_Walk_F_Masc.fbx",
   JumpStart = "jump_start.fbx",
   JumpLoop = "jump_loop.fbx",
-  JumpEnd = "jump_end.fbx",
-  JumpEnd2 = "A_Land_IdleSoft_Masc.fbx",
+  JumpEnd = "A_Land_IdleSoft_Masc.fbx",
 }
 
 export enum ModelAsset {
@@ -51,7 +50,6 @@ export class AssetManager {
       AnimationAsset.JumpStart,
       AnimationAsset.JumpLoop,
       AnimationAsset.JumpEnd,
-      AnimationAsset.JumpEnd2,
     ].forEach((name) => {
       const clip = this.animations.get(name);
       if (clip) clips.push(clip);

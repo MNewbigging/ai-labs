@@ -66,20 +66,28 @@ export class JumpTransition extends CellTransition {
   override onStart(): void {
     super.onStart();
 
-    this.agent.playAnimation(AnimationAsset.JumpStart);
+    // Wait a bit to enter jump
     setTimeout(() => {
-      this.agent.playAnimation(AnimationAsset.JumpEnd2);
-    }, 900);
+      this.agent.playAnimation(AnimationAsset.JumpStart);
+    }, 75);
+
+    // It'll automatically enter jump loop, start jump end with enough time to land
+    setTimeout(() => {
+      this.agent.playAnimation(AnimationAsset.JumpEnd);
+    }, 850);
   }
 
   override update(dt: number): void {
     super.update(dt);
 
     const model = this.agent.model;
+
+    // x/z movement
     const cellPosition = this.endCell.object.position.clone();
     this.direction = cellPosition.sub(model.position).normalize();
 
     const moveStep = this.direction.clone().multiplyScalar(dt * this.moveSpeed);
+
     model.position.add(moveStep);
   }
 }

@@ -3,6 +3,7 @@ import { AssetManager, TextureAsset } from "./asset-manager";
 import { Grid } from "./grid";
 import { GridBuilder, GridSchema } from "./grid-builder";
 import { Agent } from "./agent";
+import { getPath } from "./pathfinder";
 
 export class JumpExperiment {
   group = new THREE.Group();
@@ -33,10 +34,10 @@ export class JumpExperiment {
 
     this.agent.positionOnCell(firstCell);
 
-    const path = this.grid.getPath(firstCell, lastCell);
+    const path = getPath(firstCell, lastCell, this.grid.cells);
     console.log("path", path);
 
-    //if (path) this.agent.followPathBehaviour.setPath(path);
+    if (path) this.agent.followPathBehaviour.setPath(path);
   }
 
   update(dt: number) {

@@ -1,4 +1,5 @@
 import { Goal } from "../goal";
+import { getPath } from "../pathfinder";
 
 export class WanderGoal extends Goal {
   private idleTimer = 0;
@@ -19,7 +20,7 @@ export class WanderGoal extends Goal {
       if (!currentCell) return;
 
       const targetCell = this.agent.grid.getRandomTraversibleCell(currentCell);
-      const path = this.agent.grid.getPath(currentCell, targetCell);
+      const path = getPath(currentCell, targetCell, this.agent.grid.cells);
       if (path) {
         this.agent.followPathBehaviour.setPath(path);
         this.idleTimer = Math.random() * 3;

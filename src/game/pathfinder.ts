@@ -30,7 +30,7 @@ export function getPath(from: GridCell, to: GridCell, grid: GridCell[][]) {
 
     // Is this the end node?
     if (gridCellsAreEqual(currentNode, end)) {
-      return getPathFromEndNode(end);
+      return getPathFromEndNode(currentNode);
     }
 
     // Move the current node from open list to closed list

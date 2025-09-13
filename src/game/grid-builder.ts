@@ -65,9 +65,8 @@ export class GridBuilder {
   private getTraversible(type: GridCellType) {
     switch (type) {
       case "floor":
-        return true;
       case "void":
-        return false;
+        return true;
     }
   }
 }

@@ -25,6 +25,7 @@ export class FollowPathBehaviour {
     const start = this.path.shift();
     if (!start) return;
 
+    // Todo - this might be causing visual jitter
     this.agent.positionOnCell(start);
 
     this.setNextTransition();
@@ -35,7 +36,7 @@ export class FollowPathBehaviour {
 
     this.currentTransition.update(dt);
 
-    if (this.currentTransition.atPoint()) {
+    if (this.currentTransition.atEndPoint()) {
       this.currentCell = this.currentTransition.endCell;
 
       if (this.isPathFinished()) {

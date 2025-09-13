@@ -10,7 +10,7 @@ export class WanderGoal extends Goal {
 
   update(dt: number): void {
     // Done moving, fidget
-    if (!this.agent.followPathBehaviour.nextCell) {
+    if (!this.agent.followPathBehaviour.path.length) {
       this.idleTimer -= dt;
     }
 
@@ -23,7 +23,7 @@ export class WanderGoal extends Goal {
       const path = getPath(currentCell, targetCell, this.agent.grid.cells);
       if (path) {
         this.agent.followPathBehaviour.setPath(path);
-        this.idleTimer = Math.random() * 3;
+        this.idleTimer = 1 + Math.random() * 3;
       }
     }
   }

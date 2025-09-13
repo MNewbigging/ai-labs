@@ -29,7 +29,7 @@ export abstract class CellTransition {
     );
   }
 
-  atPoint() {
+  atEndPoint() {
     const cellPos = this.endCell.object.position.clone();
     const currentPos = this.agent.model.position.clone();
 
@@ -74,11 +74,18 @@ export class JumpTransition extends CellTransition {
       .sub(this.startCell.object.position);
     control.y = 0.8;
 
-    const curve = new THREE.QuadraticBezierCurve3(
-      this.startCell.object.position,
-      control,
-      this.endCell.object.position
-    );
+    // const curve = new THREE.QuadraticBezierCurve3(
+    //   this.startCell.object.position,
+    //   control,
+    //   this.endCell.object.position
+    // );
+
+    const start = this.startCell.object.position;
+    const end = this.endCell.object.position;
+    const mid = end.clone().sub(start).multiplyScalar(0.5).add(start);
+    mid.y += 0.5;
+
+    const curve = new THREE.CatmullRomCurve3([start, mid, end]);
 
     this.points = curve.getPoints(8);
     this.targetPoint = this.points.shift();

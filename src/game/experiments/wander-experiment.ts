@@ -17,11 +17,11 @@ export class WanderExperiment {
   ) {
     // Build the grid for this experiment
     const schema: GridSchema = [
-      ["floor", "floor", "floor", "floor", "floor", "floor", "floor", "floor"],
-      ["floor", "void", "void", "void", "floor", "floor", "floor", "void"],
       ["floor", "floor", "floor", "floor", "floor", "void", "floor", "floor"],
-      ["floor", "void", "void", "void", "floor", "floor", "floor", "void"],
-      ["floor", "floor", "floor", "floor", "floor", "floor", "floor", "floor"],
+      ["floor", "void", "floor", "void", "floor", "floor", "floor", "void"],
+      ["floor", "floor", "floor", "floor", "floor", "void", "floor", "floor"],
+      ["floor", "void", "void", "void", "floor", "floor", "void", "floor"],
+      ["floor", "floor", "floor", "floor", "floor", "void", "floor", "floor"],
     ];
     this.grid = this.gridBuilder.build(schema);
     this.group.add(this.grid.group);

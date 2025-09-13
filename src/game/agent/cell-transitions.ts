@@ -68,8 +68,8 @@ export class JumpTransition extends CellTransition {
 
     this.agent.playAnimation(AnimationAsset.JumpStart);
     setTimeout(() => {
-      this.agent.playAnimation(AnimationAsset.JumpEnd);
-    }, 750);
+      this.agent.playAnimation(AnimationAsset.JumpEnd2);
+    }, 900);
   }
 
   override update(dt: number): void {

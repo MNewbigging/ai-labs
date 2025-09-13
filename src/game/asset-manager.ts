@@ -7,10 +7,10 @@ import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 export enum AnimationAsset {
   Idle = "A_Idle_Standing_Masc.fbx",
   Walk = "A_Walk_F_Masc.fbx",
-  Jump = "A_Jump_Walking_Masc.fbx",
   JumpStart = "jump_start.fbx",
   JumpLoop = "jump_loop.fbx",
   JumpEnd = "jump_end.fbx",
+  JumpEnd2 = "A_Land_IdleSoft_Masc.fbx",
 }
 
 export enum ModelAsset {
@@ -47,11 +47,11 @@ export class AssetManager {
     const clips: THREE.AnimationClip[] = [];
     [
       AnimationAsset.Idle,
-      AnimationAsset.Jump,
       AnimationAsset.Walk,
       AnimationAsset.JumpStart,
       AnimationAsset.JumpLoop,
       AnimationAsset.JumpEnd,
+      AnimationAsset.JumpEnd2,
     ].forEach((name) => {
       const clip = this.animations.get(name);
       if (clip) clips.push(clip);

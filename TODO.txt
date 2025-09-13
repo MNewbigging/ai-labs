@@ -1,4 +1,5 @@
-
+- Transitions for moving between current and target cells, used by follow path behaviour
+- New rules for floor and voids in getNeighbours/getPath logic which uses directionality to check validity
 
 
 Experiment Ideas:

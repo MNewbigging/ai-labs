@@ -9,9 +9,13 @@ export interface GridCell {
   traversible: boolean;
 }
 
+type Direction = "left" | "right" | "up" | "down";
+
 // Used in a-star pathfinding only
+// Maybe this should not extend but have a prop for the cell...
 interface PathNode extends GridCell {
   parent?: PathNode;
+  direction?: Direction;
   costFromStart: number;
   costToEnd: number;
   costTotal: number;
@@ -109,17 +113,22 @@ export class Grid {
           continue;
         }
 
-        // Set costs
+        // Calculate costs - don't set any values on the object at this point
         this.calculateCosts(neighbour, currentNode, end);
         neighbour.parent = currentNode;
 
         // If this node is already being considered at a cheaper cost (from a different parent), skip it
+        // todo - is this broken? won't setting costs and parent affect the node in the array, tehrefore it'll always be the same values
+        // i.e using what was just set
         const onOpenList = openList.find((node) =>
           gridCellsAreEqual(node, neighbour)
         );
         if (onOpenList && onOpenList.costFromStart < neighbour.costFromStart) {
+          // log here to check...
           continue;
         }
+
+        // Set the costs now that we know it is going onto the open list
 
         // Add the node to the open list
         openList.push(neighbour);
@@ -154,6 +163,19 @@ export class Grid {
   // Previous was not also a void (can't jump over more than 1 space)
   // Floor can be a neighbour if:
   // It's in a straight line from previous 2 cells
+
+  getUp(cell: GridCell) {
+    const oneRowUp = cell.rowIndex - 1;
+
+    if (oneRowUp < 0) return undefined; // ignore out of bounds
+
+    const oneUpCell = this.cells[oneRowUp][cell.cellIndex];
+
+    if (oneUpCell.type === "floor") {
+      // If the previous was a void, make sure the direction is the same
+    }
+  }
+
   getUpperNeighbour(cell: GridCell) {
     const oneRowUp = cell.rowIndex - 1;
 
@@ -244,8 +266,35 @@ export class Grid {
     );
     neighbour.costTotal = neighbour.costFromStart + neighbour.costToEnd;
   }
+
+  private getDirection(from: GridCell, to: GridCell): Direction {
+    // Since this is a grid, directions should always be unit vectors
+    // Also, we traverse grid from top-down perspective so we only move in x or z directions
+    const direction = to.object.position
+      .clone()
+      .sub(from.object.position)
+      .normalize();
+
+    if (Math.abs(direction.x) > Math.abs(direction.z)) {
+      // Moving left or right
+      return direction.x < 0 ? "left" : "right";
+    } else {
+      // Moving up or down
+      return direction.z < 0 ? "up" : "down";
+    }
+
+    // Is the above the same as:
+    // It might be except it has to include undefined as a potential return value...
+
+    // if (direction.x < 0) return "left";
+    // if (direction.x > 0) return "right";
+    // if (direction.z < 0) return "up";
+    // if (direction.z > 0) return "down";
+
+    // return undefined;
+  }
 }
 
 function gridCellsAreEqual(a: GridCell, b: GridCell) {
-  return a.object.position.equals(b.object.position);
+  return a.object.id === b.object.id;
 }

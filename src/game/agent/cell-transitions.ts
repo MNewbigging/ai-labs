@@ -29,7 +29,7 @@ export abstract class CellTransition {
     );
   }
 
-  isFinished() {
+  atPoint() {
     const cellPos = this.endCell.object.position.clone();
     const currentPos = this.agent.model.position.clone();
 
@@ -60,13 +60,33 @@ export class WalkTransition extends CellTransition {
 }
 
 export class JumpTransition extends CellTransition {
+  private points: THREE.Vector3[] = [];
+  private targetPoint?: THREE.Vector3;
   private direction = new THREE.Vector3();
-  private moveSpeed = 1.8;
+  private moveSpeed = 3;
 
   override onStart(): void {
     super.onStart();
 
-    // Wait a bit to enter jump
+    // Create a curve to follow
+    const control = this.endCell.object.position
+      .clone()
+      .sub(this.startCell.object.position);
+    control.y = 0.8;
+
+    const curve = new THREE.QuadraticBezierCurve3(
+      this.startCell.object.position,
+      control,
+      this.endCell.object.position
+    );
+
+    this.points = curve.getPoints(8);
+    this.targetPoint = this.points.shift();
+
+    // Walk a bit
+    this.agent.playAnimation(AnimationAsset.Walk);
+
+    // Wait to enter jump
     setTimeout(() => {
       this.agent.playAnimation(AnimationAsset.JumpStart);
     }, 75);
@@ -74,20 +94,35 @@ export class JumpTransition extends CellTransition {
     // It'll automatically enter jump loop, start jump end with enough time to land
     setTimeout(() => {
       this.agent.playAnimation(AnimationAsset.JumpEnd);
-    }, 850);
+    }, 700);
   }
 
   override update(dt: number): void {
     super.update(dt);
 
-    const model = this.agent.model;
+    if (!this.targetPoint) return;
 
-    // x/z movement
-    const cellPosition = this.endCell.object.position.clone();
-    this.direction = cellPosition.sub(model.position).normalize();
+    if (this.reachedTargetPoint()) {
+      if (this.points.length === 0) {
+        // done
+      } else {
+        this.targetPoint = this.points.shift();
+      }
+    } else {
+      // Move towards point
+      const model = this.agent.model;
+      this.direction = this.targetPoint.clone().sub(model.position).normalize();
+      const moveStep = this.direction
+        .clone()
+        .multiplyScalar(dt * this.moveSpeed);
+      model.position.add(moveStep);
+    }
+  }
 
-    const moveStep = this.direction.clone().multiplyScalar(dt * this.moveSpeed);
+  private reachedTargetPoint() {
+    const currentPos = this.agent.model.position.clone();
+    if (!this.targetPoint) return false;
 
-    model.position.add(moveStep);
+    return this.targetPoint.distanceTo(currentPos) < 0.01;
   }
 }

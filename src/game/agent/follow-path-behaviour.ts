@@ -14,8 +14,6 @@ export class FollowPathBehaviour {
 
   private currentTransition?: CellTransition;
 
-  private startTimer = 0;
-
   constructor(public agent: Agent) {}
 
   setPath(path: GridCell[]) {
@@ -37,7 +35,7 @@ export class FollowPathBehaviour {
 
     this.currentTransition.update(dt);
 
-    if (this.currentTransition.isFinished()) {
+    if (this.currentTransition.atPoint()) {
       this.currentCell = this.currentTransition.endCell;
 
       if (this.isPathFinished()) {
@@ -49,13 +47,6 @@ export class FollowPathBehaviour {
   }
 
   private setNextTransition() {
-    // if (this.startTimer) {
-    //   const took = performance.now() - this.startTimer;
-    //   console.log("last transition took", took);
-    // }
-
-    // this.startTimer = performance.now();
-
     // Start is always current cell
     const start = this.currentCell;
     if (!start) {
@@ -70,17 +61,15 @@ export class FollowPathBehaviour {
     if (!end) return;
 
     if (end.type === "floor") {
-      console.log("starting walk");
       this.currentTransition = new WalkTransition(this.agent, start, end);
       this.currentTransition.onStart();
     }
 
     if (end.type === "void") {
-      // We don't actuall end on the void, but the next cell in the parth
+      // We don't actually end on the void, but the next cell in the parth
       const actualEnd = this.path.shift();
       if (!actualEnd) return; // should never happen...
 
-      console.log("starting jump");
       this.currentTransition = new JumpTransition(this.agent, start, actualEnd);
       this.currentTransition.onStart();
     }

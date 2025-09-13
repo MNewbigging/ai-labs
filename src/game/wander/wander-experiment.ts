@@ -23,7 +23,7 @@ export class WanderExperiment {
       ["floor", "void", "void", "void", "floor", "floor", "floor", "void"],
       ["floor", "floor", "floor", "floor", "floor", "floor", "floor", "floor"],
     ];
-    this.grid = this.gridBuilder.buildGrid(schema);
+    this.grid = this.gridBuilder.build(schema);
     this.group.add(this.grid.group);
 
     // Create the agents

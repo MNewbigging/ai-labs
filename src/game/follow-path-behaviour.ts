@@ -68,9 +68,23 @@ export class FollowPathBehaviour {
     this.rotationMatrix.lookAt(nextPos, model.position, model.up);
     this.targetQuaternion.setFromRotationMatrix(this.rotationMatrix);
 
-    // If the next cell is more than 1 unit away, start jumping
-    // Should really read: if a void separates this and next cell, start jumping
-    // Could be done if the void was part of the path
+    /**
+     * Read the next cell's type to work out how to get there / what sort of transition we need
+     */
+
+    if (this.nextCell.type === "void") {
+      // We have to ignore this one and set next again
+    }
+
+    if (this.currentCell?.type === "floor") {
+      if (this.nextCell.type === "floor") {
+        // We just walk
+      }
+      if (this.nextCell.type === "void") {
+        // We jump - where? Void can determine direction
+        //
+      }
+    }
 
     /**
      * How should this class determine which method/animation to use to get to the next cell?
@@ -84,5 +98,29 @@ export class FollowPathBehaviour {
      * - Should a transition be a typed property of the class? So we just update the current transition?
      * -- Then I could write transitions in isolation that take the start/end/path?
      */
+  }
+}
+
+abstract class CellTransition {
+  constructor(
+    public agent: Agent,
+    public startCell: GridCell,
+    public endCell: GridCell
+  ) {}
+
+  abstract update(dt: number): void;
+}
+
+class WalkTransition extends CellTransition {
+  private direction = new THREE.Vector3();
+  private moveSpeed = 1.8;
+
+  update(dt: number): void {
+    const model = this.agent.model;
+    const cellPosition = this.endCell.object.position.clone();
+    this.direction = cellPosition.sub(model.position).normalize();
+
+    const moveStep = this.direction.clone().multiplyScalar(dt * this.moveSpeed);
+    model.position.add(moveStep);
   }
 }

@@ -101,7 +101,7 @@ export class Grid {
         this.asPathNode(gridCell)
       );
       for (const neighbour of neighbours) {
-        // If this node is an obstacle or already explored, ignore it
+        // If this node isn't traversible or already explored, ignore it
         if (
           !neighbour.traversible ||
           closedList.some((node) => gridCellsAreEqual(node, neighbour))
@@ -150,8 +150,10 @@ export class Grid {
 
   // I think voids should still be part of the path if they are being jumped over
   // Might need to rethink the 'traversible' property on grid cells...
-  // If I didn't make square grids, voids wouldn't exist so the getNeighbour would need to work by
-  // checking distances to nearby cells.
+  // Void can be a neighbour if:
+  // Previous was not also a void (can't jump over more than 1 space)
+  // Floor can be a neighbour if:
+  // It's in a straight line from previous 2 cells
   getUpperNeighbour(cell: GridCell) {
     const oneRowUp = cell.rowIndex - 1;
 
@@ -231,12 +233,16 @@ export class Grid {
     };
   }
 
-  private calculateCosts(current: PathNode, previous: PathNode, end: PathNode) {
-    current.costFromStart = previous.costFromStart + 1;
-    current.costToEnd = current.object.position.distanceToSquared(
+  private calculateCosts(
+    neighbour: PathNode,
+    previous: PathNode,
+    end: PathNode
+  ) {
+    neighbour.costFromStart = previous.costFromStart + 1;
+    neighbour.costToEnd = neighbour.object.position.distanceToSquared(
       end.object.position
     );
-    current.costTotal = current.costFromStart + current.costToEnd;
+    neighbour.costTotal = neighbour.costFromStart + neighbour.costToEnd;
   }
 }
 

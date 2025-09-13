@@ -4,7 +4,6 @@ import { Grid, GridCell } from "./grid";
 
 export type GridCellType = "floor" | "void";
 
-// Variable rows, all rows must have same number of cells
 export type GridSchema = GridCellType[][];
 
 export class GridBuilder {
@@ -20,7 +19,7 @@ export class GridBuilder {
     this.floorGeometry.translate(0, -0.5, 0); // so top of box is at floor level
   }
 
-  buildGrid(schema: GridSchema) {
+  build(schema: GridSchema) {
     // Ensure rows are all same length
     const length = schema[0].length;
     const ok = schema.every((row) => row.length === length);
@@ -33,18 +32,14 @@ export class GridBuilder {
     const gridCells: GridCell[][] = [];
 
     for (let rowIndex = 0; rowIndex < schema.length; rowIndex++) {
-      // Schema types for this row
       const rowTypes = schema[rowIndex];
-      // Completed cells for this row
       const cellRow: GridCell[] = [];
 
       for (let cellIndex = 0; cellIndex < rowTypes.length; cellIndex++) {
         const type = rowTypes[cellIndex];
 
         const object = this.createCellObject(type);
-        if (object) {
-          object.position.set(cellIndex, 0, rowIndex);
-        }
+        object.position.set(cellIndex, 0, rowIndex);
 
         const traversible = this.getTraversible(type);
 
@@ -76,13 +71,3 @@ export class GridBuilder {
     }
   }
 }
-
-/**
- * Is this the best way of creating grids? I thought it would be handy to use the schema, but it's
- * actually somewhat difficult since it's square. Would it be better some other way?
- *
- * - Manual creation. Each experiment manually creates cells via factory functions. Then the path nodes
- *   are created by reading what gets made this way?
- *   - Would mean it's a little harder to visualise what a level looks like from reading code, schema does
- *     read somewhat nicer.
- */

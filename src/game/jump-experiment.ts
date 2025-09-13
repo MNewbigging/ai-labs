@@ -16,7 +16,7 @@ export class JumpExperiment {
   ) {
     // Grid
     const schema: GridSchema = [["floor", "floor", "void", "floor", "floor"]];
-    this.grid = gridBuilder.buildGrid(schema);
+    this.grid = gridBuilder.build(schema);
     this.group.add(this.grid.group);
 
     // Agent

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { AssetManager, TextureAsset } from "./asset-manager";
+import { AssetManager, TextureAsset } from "../asset-manager";
 import { Grid, GridCell } from "./grid";
 
 export type GridCellType = "floor" | "void";

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { AnimationAsset } from "./asset-manager";
+import { AnimationAsset } from "../asset-manager";
 
 export class AnimatedModel {
   protected mixer: THREE.AnimationMixer;

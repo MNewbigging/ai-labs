@@ -2,9 +2,9 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RenderPipeline } from "./render-pipeline";
 import { AssetManager } from "./asset-manager";
-import { WanderExperiment } from "./wander/wander-experiment";
-import { GridBuilder } from "./grid-builder";
-import { JumpExperiment } from "./jump-experiment";
+import { GridBuilder } from "./grid/grid-builder";
+import { JumpExperiment } from "./experiments/jump-experiment";
+import { WanderExperiment } from "./experiments/wander-experiment";
 
 export class GameState {
   private renderPipeline: RenderPipeline;

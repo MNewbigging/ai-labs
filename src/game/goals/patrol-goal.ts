@@ -1,6 +1,6 @@
-import { Agent } from "./agent";
+import { Agent } from "../agent/agent";
+import { GridCell } from "../grid/grid";
 import { Goal } from "./goal";
-import { GridCell } from "./grid";
 
 export class Patrol extends Goal {
   constructor(agent: Agent, private path: GridCell[]) {

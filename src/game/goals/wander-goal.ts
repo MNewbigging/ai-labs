@@ -1,5 +1,5 @@
-import { Goal } from "../goal";
-import { getPath } from "../pathfinder";
+import { getPath } from "../grid/pathfinder";
+import { Goal } from "./goal";
 
 export class WanderGoal extends Goal {
   private idleTimer = 0;

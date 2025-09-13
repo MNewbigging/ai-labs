@@ -1,9 +1,9 @@
 import * as THREE from "three";
-import { AnimationAsset } from "./asset-manager";
-import { Grid, GridCell } from "./grid";
-import { FollowPathBehaviour } from "./follow-path-behaviour";
-import { Brain } from "./brain";
+import { AnimationAsset } from "../asset-manager";
+import { Brain } from "../goals/brain";
+import { Grid, GridCell } from "../grid/grid";
 import { AnimatedModel } from "./animated-model";
+import { FollowPathBehaviour } from "./follow-path-behaviour";
 
 export class Agent extends AnimatedModel {
   brain: Brain;

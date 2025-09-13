@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Agent } from "./agent";
-import { GridCell } from "./grid";
-import { AnimationAsset } from "./asset-manager";
+import { AnimationAsset } from "../asset-manager";
+import { GridCell } from "../grid/grid";
 
 // A path is an array of grid cells which are all neighbouring
 export class FollowPathBehaviour {

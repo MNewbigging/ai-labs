@@ -1,9 +1,9 @@
 import * as THREE from "three";
-import { AssetManager, TextureAsset } from "./asset-manager";
-import { Grid } from "./grid";
-import { GridBuilder, GridSchema } from "./grid-builder";
-import { Agent } from "./agent";
-import { getPath } from "./pathfinder";
+import { AssetManager, TextureAsset } from "../asset-manager";
+import { Grid } from "../grid/grid";
+import { Agent } from "../agent/agent";
+import { GridBuilder, GridSchema } from "../grid/grid-builder";
+import { getPath } from "../grid/pathfinder";
 
 export class JumpExperiment {
   group = new THREE.Group();

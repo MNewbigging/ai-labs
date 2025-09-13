@@ -1,4 +1,4 @@
-import { Agent } from "./agent";
+import { Agent } from "../agent/agent";
 
 export abstract class Goal {
   constructor(public agent: Agent) {}

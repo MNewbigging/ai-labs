@@ -1,9 +1,9 @@
 import * as THREE from "three";
-import { Agent } from "../agent";
+import { WanderGoal } from "../goals/wander-goal";
+import { Agent } from "../agent/agent";
 import { AssetManager, TextureAsset } from "../asset-manager";
-import { Grid } from "../grid";
-import { GridBuilder, GridSchema } from "../grid-builder";
-import { WanderGoal } from "./wander-goal";
+import { Grid } from "../grid/grid";
+import { GridBuilder, GridSchema } from "../grid/grid-builder";
 
 export class WanderExperiment {
   group = new THREE.Group(); // Everything this experiment creates is placed in here

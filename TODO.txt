@@ -1,31 +1,34 @@
-- Transitions for moving between current and target cells, used by follow path behaviour
-- New rules for floor and voids in getNeighbours/getPath logic which uses directionality to check validity
-
-
-- Need a better jump landing animation
-
-
-Experiment Ideas:
-
-- Find paths between a series of waypoints
-
-- Search for item, pick it up
 
 
 
-Grid / cell ideas:
 
-- cells that affect position of model (teleport, conveyor, inc/decrease speed)
 
-- jumping over gaps
 
+
+Navigation:
+- crouch walk transition
+- climb/drop transition
 - stairs
 
+Interaction:
+- button press
+- pick up
+- carry
+
+Logic/Goals:
+- patrol between set cells
 
 
-Design thoughts:
 
-- Test how it could work without using a grid; factory methods create 'nodes' of various types like
-  floor, stair, pillar etc. Then we derive the astar path nodes from those 3d node objects. 
-  -- How do I work out when to jump to the next node?
-  -- How would I work out neighbouring nodes? 
+NOTES:
+
+- Cell Transitions should define their own logic for when they are finished rather than checking distance
+  to the end cell. E.g it may need to wait for an animation to finish.
+
+- If I auto enter Idle/some anim from JumpEnd, I may need to:
+
+    if (currentActionName === AnimationAsset.JumpEnd) {
+          this.currentAction?.stop();
+          nextAction.play();
+        }
+

@@ -20,7 +20,7 @@ export class PatrolGoal extends Goal {
     const { followPathBehaviour } = this.agent;
     const { currentCell } = followPathBehaviour;
 
-    if (followPathBehaviour.isPathFinished() && currentCell) {
+    if (followPathBehaviour.isPathFinished()) {
       // Get next target
       this.setNextCellIndex();
       let targetCell = this.patrolRoute[this.nextCellIndex];

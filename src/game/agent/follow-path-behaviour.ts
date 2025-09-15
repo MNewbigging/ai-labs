@@ -51,12 +51,6 @@ export class FollowPathBehaviour {
   private setNextTransition() {
     // Start is always current cell
     const start = this.currentCell;
-    if (!start) {
-      console.error(
-        "Must have a current cell before starting a new transition"
-      );
-      return;
-    }
 
     // End is next cell in the path
     const end = this.path.shift();

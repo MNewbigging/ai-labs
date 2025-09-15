@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { AnimationAsset } from "../asset-manager";
+import { AnimationAsset } from "../../asset-manager";
 import { CellTransition } from "./cell-transition";
 
 export class JumpTransition extends CellTransition {

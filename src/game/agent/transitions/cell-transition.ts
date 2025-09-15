@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { GridCell } from "../grid/grid";
-import { Agent } from "./agent";
-import { AnimationAsset } from "../asset-manager";
+import { GridCell } from "../../grid/grid";
+import { Agent } from "../agent";
+import { AnimationAsset } from "../../asset-manager";
 
 export abstract class CellTransition {
   // Turning handled at base level - same for all transitions

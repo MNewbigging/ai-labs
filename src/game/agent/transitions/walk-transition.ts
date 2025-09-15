@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { CellTransition } from "./cell-transition";
-import { AnimationAsset } from "../asset-manager";
+import { AnimationAsset } from "../../asset-manager";
 
 export class WalkTransition extends CellTransition {
   private direction = new THREE.Vector3();

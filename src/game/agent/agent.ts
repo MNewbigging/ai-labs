@@ -12,13 +12,14 @@ export class Agent extends AnimatedModel {
   constructor(
     public grid: Grid,
     public model: THREE.Object3D,
-    clips: THREE.AnimationClip[]
+    clips: THREE.AnimationClip[],
+    startingCell: GridCell
   ) {
     super(model, clips);
 
     this.brain = new Brain();
 
-    this.followPathBehaviour = new FollowPathBehaviour(this);
+    this.followPathBehaviour = new FollowPathBehaviour(this, startingCell);
 
     this.playAnimation(AnimationAsset.Idle);
   }

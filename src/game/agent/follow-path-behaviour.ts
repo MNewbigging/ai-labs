@@ -9,12 +9,14 @@ import {
 
 // A path is an array of grid cells which are all neighbouring
 export class FollowPathBehaviour {
-  currentCell?: GridCell;
+  currentCell: GridCell;
   path: GridCell[] = [];
 
   private currentTransition?: CellTransition;
 
-  constructor(public agent: Agent) {}
+  constructor(public agent: Agent, startingCell: GridCell) {
+    this.currentCell = startingCell;
+  }
 
   setPath(path: GridCell[]) {
     if (!path.length) return;

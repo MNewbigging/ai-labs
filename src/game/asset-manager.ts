@@ -6,6 +6,7 @@ import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 
 export enum AnimationAsset {
   Idle = "A_Idle_Standing_Masc.fbx",
+  Idle2WalkF = "A_Idle_ToWalkF_Masc.fbx",
   Walk = "A_Walk_F_Masc.fbx",
   JumpStart = "jump_start.fbx",
   JumpLoop = "jump_loop.fbx",
@@ -46,6 +47,7 @@ export class AssetManager {
     const clips: THREE.AnimationClip[] = [];
     [
       AnimationAsset.Idle,
+      AnimationAsset.Idle2WalkF,
       AnimationAsset.Walk,
       AnimationAsset.JumpStart,
       AnimationAsset.JumpLoop,

@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { WanderGoal } from "../goals/wander-goal";
 import { Agent } from "../agent/agent";
 import { AssetManager, TextureAsset } from "../asset-manager";
-import { Grid } from "../grid/grid";
+import { Grid, GridCell } from "../grid/grid";
 import { GridBuilder, GridSchema } from "../grid/grid-builder";
 import { PatrolGoal } from "../goals/patrol-goal";
 import { getPath } from "../grid/pathfinder";
@@ -37,32 +37,31 @@ export class WanderExperiment {
     const botRight = botRow[botRow.length - 1];
 
     // Patrol agents
-    const patrolAgentBlue = this.makeAgent(TextureAsset.DummyBlue);
+    const patrolAgentBlue = this.makeAgent(TextureAsset.DummyBlue, topLeft);
     patrolAgentBlue.brain.assignGoal(
       new PatrolGoal(patrolAgentBlue, [topLeft, topRight, botRight, botLeft])
     );
-    patrolAgentBlue.positionOnCell(topLeft);
     this.agents.push(patrolAgentBlue);
     this.group.add(patrolAgentBlue.model);
 
-    const patrolAgentRed = this.makeAgent(TextureAsset.DummyRed);
+    const patrolAgentRed = this.makeAgent(TextureAsset.DummyRed, botRight);
     patrolAgentRed.brain.assignGoal(
       new PatrolGoal(patrolAgentRed, [botRight, botLeft, topLeft, topRight])
     );
-    patrolAgentRed.positionOnCell(botRight);
     this.agents.push(patrolAgentRed);
     this.group.add(patrolAgentRed.model);
 
     // Wander agents
-    const wanderAgentGreen = this.makeAgent(TextureAsset.DummyGreen);
+    const wanderAgentGreen = this.makeAgent(TextureAsset.DummyGreen, botLeft);
     wanderAgentGreen.brain.assignGoal(new WanderGoal(wanderAgentGreen));
-    wanderAgentGreen.positionOnCell(botLeft);
     this.agents.push(wanderAgentGreen);
     this.group.add(wanderAgentGreen.model);
 
-    const wanderAgentYellow = this.makeAgent(TextureAsset.DummyYellow);
+    const wanderAgentYellow = this.makeAgent(
+      TextureAsset.DummyYellow,
+      topRight
+    );
     wanderAgentYellow.brain.assignGoal(new WanderGoal(wanderAgentYellow));
-    wanderAgentYellow.positionOnCell(topRight);
     this.agents.push(wanderAgentYellow);
     this.group.add(wanderAgentYellow.model);
   }
@@ -75,10 +74,10 @@ export class WanderExperiment {
     this.agents.forEach((agent) => agent.update(dt));
   }
 
-  private makeAgent(colour: TextureAsset) {
+  private makeAgent(colour: TextureAsset, startingCell: GridCell) {
     const model = this.assetManager.getDummyModel(colour);
     const clips = this.assetManager.getDummyClips();
 
-    return new Agent(this.grid, model, clips);
+    return new Agent(this.grid, model, clips, startingCell);
   }
 }

@@ -15,6 +15,7 @@ export class WalkTransition extends CellTransition {
   override update(dt: number): void {
     super.update(dt);
 
+    // Move towards end cell
     const model = this.agent.model;
     const cellPosition = this.endCell.object.position.clone();
     this.direction = cellPosition.sub(model.position).normalize();

@@ -47,8 +47,6 @@ export class PatrolGoal extends Goal {
       targetCell = this.routeCells[this.nextCellIndex];
     }
 
-    console.log("patrol to ", targetCell);
-
     const path = getPath(currentCell, targetCell, this.agent.grid.cells);
     if (path) this.agent.followPathBehaviour.setPath(path);
 

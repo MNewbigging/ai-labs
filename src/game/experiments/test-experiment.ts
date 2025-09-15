@@ -18,13 +18,14 @@ export class TestExperiment {
     private assetManager: AssetManager
   ) {
     // Grid
-    const schema: GridSchema = [["floor", "floor", "floor"]];
+    const schema: GridSchema = [["floor", "floor", "floor", "floor"]];
     this.grid = gridBuilder.build(schema);
     this.group.add(this.grid.group);
 
     const start = this.grid.cells[0][0];
     const mid = this.grid.cells[0][1];
-    const end = this.grid.cells[0][2];
+    const mid2 = this.grid.cells[0][2];
+    const end = this.grid.cells[0][3];
 
     // Agent
     const model = this.assetManager.getDummyModel(TextureAsset.DummyYellow);
@@ -33,7 +34,7 @@ export class TestExperiment {
     this.agent = new Agent(this.grid, model, clips, start);
     this.agent.brain.assignGoal(
       new PatrolGoal(this.agent, {
-        routeCells: [start, mid, end],
+        routeCells: [start, mid, mid2, end],
         waitTime: 1,
         reverse: true,
       })

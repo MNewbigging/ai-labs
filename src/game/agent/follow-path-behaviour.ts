@@ -38,17 +38,12 @@ export class FollowPathBehaviour {
 
     if (this.currentTransition.atEndPoint()) {
       this.currentCell = this.currentTransition.endCell;
-
-      if (this.isPathFinished()) {
-        this.onFinishPath();
-      } else {
-        this.setNextTransition();
-      }
+      this.setNextTransition();
     }
   }
 
   isPathFinished() {
-    return this.path.length === 0;
+    return this.path.length === 0 && !this.currentTransition;
   }
 
   private setNextTransition() {
@@ -63,7 +58,11 @@ export class FollowPathBehaviour {
 
     // End is next cell in the path
     const end = this.path.shift();
-    if (!end) return;
+    if (!end) {
+      // If there are no more cells in the path, the path is done
+      this.onFinishPath();
+      return;
+    }
 
     if (end.type === "floor") {
       this.currentTransition = new WalkTransition(this.agent, start, end);

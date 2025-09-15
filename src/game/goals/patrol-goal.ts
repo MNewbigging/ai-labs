@@ -4,7 +4,7 @@ import { getPath } from "../grid/pathfinder";
 import { Goal } from "./goal";
 
 export class PatrolGoal extends Goal {
-  private nextCellIndex = 0;
+  private nextCellIndex = -1;
 
   constructor(agent: Agent, private patrolRoute: GridCell[]) {
     super(agent);
@@ -17,18 +17,21 @@ export class PatrolGoal extends Goal {
   onStart(): void {}
 
   update(dt: number): void {
-    if (
-      this.agent.followPathBehaviour.isPathFinished() &&
-      this.agent.followPathBehaviour.currentCell
-    ) {
+    const { followPathBehaviour } = this.agent;
+    const { currentCell } = followPathBehaviour;
+
+    if (followPathBehaviour.isPathFinished() && currentCell) {
       // Get next target
       this.setNextCellIndex();
-      const targetCell = this.patrolRoute[this.nextCellIndex];
-      const path = getPath(
-        this.agent.followPathBehaviour.currentCell,
-        targetCell,
-        this.agent.grid.cells
-      );
+      let targetCell = this.patrolRoute[this.nextCellIndex];
+
+      // Already there?
+      if (targetCell.object.id === currentCell.object.id) {
+        this.setNextCellIndex();
+        targetCell = this.patrolRoute[this.nextCellIndex];
+      }
+
+      const path = getPath(currentCell, targetCell, this.agent.grid.cells);
       if (path) this.agent.followPathBehaviour.setPath(path);
     }
   }

@@ -5,6 +5,7 @@ import { AssetManager, TextureAsset } from "../asset-manager";
 import { Grid } from "../grid/grid";
 import { GridBuilder, GridSchema } from "../grid/grid-builder";
 import { PatrolGoal } from "../goals/patrol-goal";
+import { getPath } from "../grid/pathfinder";
 
 export class WanderExperiment {
   group = new THREE.Group(); // Everything this experiment creates is placed in here
@@ -41,34 +42,29 @@ export class WanderExperiment {
       new PatrolGoal(patrolAgentBlue, [topLeft, topRight, botRight, botLeft])
     );
     patrolAgentBlue.positionOnCell(topLeft);
+    this.agents.push(patrolAgentBlue);
+    this.group.add(patrolAgentBlue.model);
 
     const patrolAgentRed = this.makeAgent(TextureAsset.DummyRed);
     patrolAgentRed.brain.assignGoal(
       new PatrolGoal(patrolAgentRed, [botRight, botLeft, topLeft, topRight])
     );
     patrolAgentRed.positionOnCell(botRight);
+    this.agents.push(patrolAgentRed);
+    this.group.add(patrolAgentRed.model);
 
     // Wander agents
     const wanderAgentGreen = this.makeAgent(TextureAsset.DummyGreen);
     wanderAgentGreen.brain.assignGoal(new WanderGoal(wanderAgentGreen));
     wanderAgentGreen.positionOnCell(botLeft);
+    this.agents.push(wanderAgentGreen);
+    this.group.add(wanderAgentGreen.model);
 
     const wanderAgentYellow = this.makeAgent(TextureAsset.DummyYellow);
     wanderAgentYellow.brain.assignGoal(new WanderGoal(wanderAgentYellow));
     wanderAgentYellow.positionOnCell(topRight);
-
-    this.agents.push(
-      patrolAgentBlue,
-      patrolAgentRed,
-      wanderAgentGreen,
-      wanderAgentYellow
-    );
-    this.group.add(
-      patrolAgentBlue.model,
-      patrolAgentRed.model,
-      wanderAgentGreen.model,
-      wanderAgentYellow.model
-    );
+    this.agents.push(wanderAgentYellow);
+    this.group.add(wanderAgentYellow.model);
   }
 
   dispose() {

@@ -39,14 +39,18 @@ export class WanderExperiment {
     // Patrol agents
     const patrolAgentBlue = this.makeAgent(TextureAsset.DummyBlue, topLeft);
     patrolAgentBlue.brain.assignGoal(
-      new PatrolGoal(patrolAgentBlue, [topLeft, topRight, botRight, botLeft])
+      new PatrolGoal(patrolAgentBlue, {
+        routeCells: [topLeft, topRight, botRight, botLeft],
+      })
     );
     this.agents.push(patrolAgentBlue);
     this.group.add(patrolAgentBlue.model);
 
     const patrolAgentRed = this.makeAgent(TextureAsset.DummyRed, botRight);
     patrolAgentRed.brain.assignGoal(
-      new PatrolGoal(patrolAgentRed, [botRight, botLeft, topLeft, topRight])
+      new PatrolGoal(patrolAgentRed, {
+        routeCells: [botRight, botLeft, topLeft, topRight],
+      })
     );
     this.agents.push(patrolAgentRed);
     this.group.add(patrolAgentRed.model);

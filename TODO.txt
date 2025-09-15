@@ -16,7 +16,6 @@ Interaction:
 - carry
 
 Logic/Goals:
-- patrol between set cells
 
 
 

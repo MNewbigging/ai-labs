@@ -19,35 +19,47 @@ export class TestExperiment {
   ) {
     // Grid
     const schema: GridSchema = [
-      ["floor", "floor", "floor", "floor", "floor", "floor"],
+      ["floor", "floor", "void", "void"],
+      ["floor", "floor", "void", "void"],
+      ["floor", "floor", "void", "floor"],
     ];
     this.grid = gridBuilder.build(schema);
-
-    // Raise floor pieces to make stairs (todo - work out better way to do this)
-    const topRow = this.grid.cells[0];
-    // 0 at 0
-    topRow[1].object.position.y = 0.2;
-    topRow[2].object.position.y = 0.4;
-    topRow[3].object.position.y = 0.6;
-    topRow[4].object.position.y = 0.4;
-    topRow[5].object.position.y = 0.2;
-    // 6 at 0
-
     this.group.add(this.grid.group);
+
+    const topLeft = this.grid.cells[0][0];
+    const topRight = this.grid.cells[0][1];
+    const midLeft = this.grid.cells[1][0];
+    const midRight = this.grid.cells[1][1];
+    const botLeft = this.grid.cells[2][0];
+    const botRight = this.grid.cells[2][1];
+
+    const farRight = this.grid.cells[2][3];
+    farRight.object.position.y = 1;
+
+    // botLeft at 0
+    midLeft.object.position.y = 0.2;
+    topLeft.object.position.y = 0.4;
+    topRight.object.position.y = 0.6;
+    midRight.object.position.y = 0.8;
+    botRight.object.position.y = 1;
 
     // Agent
     const model = this.assetManager.getDummyModel(TextureAsset.DummyYellow);
     const clips = this.assetManager.getDummyClips();
 
-    this.agent = new Agent(this.grid, model, clips, topRow[0]);
-    this.agent.brain.assignGoal(
-      new PatrolGoal(this.agent, {
-        routeCells: [...topRow],
-        waitTime: 1,
-        reverse: true,
-      })
-    );
+    this.agent = new Agent(this.grid, model, clips, botLeft);
     this.group.add(this.agent.model);
+
+    const path = getPath(botLeft, farRight, this.grid.cells);
+    if (path) this.agent.followPathBehaviour.setPath(path);
+
+    // this.agent.brain.assignGoal(
+    //   new PatrolGoal(this.agent, {
+    //     routeCells: [],
+    //     waitTime: 1,
+    //     reverse: true,
+    //   })
+    // );
   }
 
   update(dt: number) {

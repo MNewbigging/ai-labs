@@ -147,11 +147,20 @@ function isValidNeighbour(node: PathNode, neighbour: GridCell) {
   }
 
   if (neighbour.type === "floor") {
-    // If this floor follows as void
+    // If this floor follows a void
     if (node.cell.type === "void") {
       // It must match the same direction as the void
       return node.direction === getDirection(node.cell, neighbour);
     }
+
+    // This floor must be no more than .2 difference in height from previous
+    const difference =
+      Math.abs(neighbour.object.position.y) -
+      Math.abs(node.cell.object.position.y);
+    const isOk = Math.abs(difference) <= 0.21; // extra 0.01 for epsilon
+    console.log("isOk", difference, isOk);
+
+    return isOk;
   }
 
   return true;

@@ -1,4 +1,13 @@
 
+Stairs & multiple height levels:
+1 - pathfinder getNeighbours needs to take into account the height levels of neighbour cells
+  -- should only be able to step up/down in increments of .2
+
+2 - introduce falling from any height
+  -- a lower neighbour is always valid
+  -- need to have a fall transition, choose between walk & fall based on height diff of start & end
+  
+
 
 
 
@@ -10,7 +19,7 @@ Animations:
 Navigation:
 - crouch walk transition
 - climb/drop transition
-- stairs
+
 
 Interaction:
 - button press

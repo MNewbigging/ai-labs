@@ -2,7 +2,9 @@
 
 
 
-
+Animations:
+- falling
+- crouch forward strafe 
 
 
 Navigation:

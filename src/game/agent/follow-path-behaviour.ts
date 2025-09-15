@@ -1,11 +1,9 @@
 import { Agent } from "./agent";
 import { AnimationAsset } from "../asset-manager";
 import { GridCell } from "../grid/grid";
-import {
-  CellTransition,
-  JumpTransition,
-  WalkTransition,
-} from "./cell-transitions";
+import { CellTransition } from "./cell-transition";
+import { WalkTransition } from "./walk-transition";
+import { JumpTransition } from "./jump-transition";
 
 // A path is an array of grid cells which are all neighbouring
 export class FollowPathBehaviour {

@@ -4,6 +4,7 @@ import { Agent } from "../agent/agent";
 import { AssetManager, TextureAsset } from "../asset-manager";
 import { Grid } from "../grid/grid";
 import { GridBuilder, GridSchema } from "../grid/grid-builder";
+import { PatrolGoal } from "../goals/patrol-goal";
 
 export class WanderExperiment {
   group = new THREE.Group(); // Everything this experiment creates is placed in here
@@ -26,27 +27,48 @@ export class WanderExperiment {
     this.grid = this.gridBuilder.build(schema);
     this.group.add(this.grid.group);
 
-    // Create the agents
-    const clips = this.assetManager.getDummyClips();
-    [
-      TextureAsset.DummyBlue,
-      TextureAsset.DummyGreen,
-      TextureAsset.DummyYellow,
-      TextureAsset.DummyRed,
-    ].forEach((colour) => {
-      const model = this.assetManager.getDummyModel(colour);
-      const agent = new Agent(this.grid, model, clips);
-      agent.brain.assignGoal(new WanderGoal(agent));
-      this.group.add(agent.model);
+    const topRow = this.grid.cells[0];
+    const topLeft = topRow[0];
+    const topRight = topRow[topRow.length - 1];
 
-      this.agents.push(agent);
-    });
+    const botRow = this.grid.cells[this.grid.cells.length - 1];
+    const botLeft = botRow[0];
+    const botRight = botRow[botRow.length - 1];
 
-    // gross
-    this.agents[0].positionOnCell(this.grid.cells[0][0]);
-    this.agents[1].positionOnCell(this.grid.cells[0][6]);
-    this.agents[2].positionOnCell(this.grid.cells[4][0]);
-    this.agents[3].positionOnCell(this.grid.cells[4][6]);
+    // Patrol agents
+    const patrolAgentBlue = this.makeAgent(TextureAsset.DummyBlue);
+    patrolAgentBlue.brain.assignGoal(
+      new PatrolGoal(patrolAgentBlue, [topLeft, topRight, botRight, botLeft])
+    );
+    patrolAgentBlue.positionOnCell(topLeft);
+
+    const patrolAgentRed = this.makeAgent(TextureAsset.DummyRed);
+    patrolAgentRed.brain.assignGoal(
+      new PatrolGoal(patrolAgentRed, [botRight, botLeft, topLeft, topRight])
+    );
+    patrolAgentRed.positionOnCell(botRight);
+
+    // Wander agents
+    const wanderAgentGreen = this.makeAgent(TextureAsset.DummyGreen);
+    wanderAgentGreen.brain.assignGoal(new WanderGoal(wanderAgentGreen));
+    wanderAgentGreen.positionOnCell(botLeft);
+
+    const wanderAgentYellow = this.makeAgent(TextureAsset.DummyYellow);
+    wanderAgentYellow.brain.assignGoal(new WanderGoal(wanderAgentYellow));
+    wanderAgentYellow.positionOnCell(topRight);
+
+    this.agents.push(
+      patrolAgentBlue,
+      patrolAgentRed,
+      wanderAgentGreen,
+      wanderAgentYellow
+    );
+    this.group.add(
+      patrolAgentBlue.model,
+      patrolAgentRed.model,
+      wanderAgentGreen.model,
+      wanderAgentYellow.model
+    );
   }
 
   dispose() {
@@ -55,5 +77,12 @@ export class WanderExperiment {
 
   update(dt: number) {
     this.agents.forEach((agent) => agent.update(dt));
+  }
+
+  private makeAgent(colour: TextureAsset) {
+    const model = this.assetManager.getDummyModel(colour);
+    const clips = this.assetManager.getDummyClips();
+
+    return new Agent(this.grid, model, clips);
   }
 }

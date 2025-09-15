@@ -1,9 +1,12 @@
 import { Agent } from "../agent/agent";
 import { GridCell } from "../grid/grid";
+import { getPath } from "../grid/pathfinder";
 import { Goal } from "./goal";
 
-export class Patrol extends Goal {
-  constructor(agent: Agent, private path: GridCell[]) {
+export class PatrolGoal extends Goal {
+  private nextCellIndex = 0;
+
+  constructor(agent: Agent, private patrolRoute: GridCell[]) {
     super(agent);
   }
 
@@ -11,14 +14,30 @@ export class Patrol extends Goal {
     return 1;
   }
 
-  onStart(): void {
-    this.agent.followPathBehaviour.setPath(this.path);
-  }
+  onStart(): void {}
 
   update(dt: number): void {
-    // If the agent has reached the end of the path
-    if (!this.agent.followPathBehaviour.path.length) {
-      this.agent.followPathBehaviour.setPath(this.path.reverse());
+    if (
+      this.agent.followPathBehaviour.isPathFinished() &&
+      this.agent.followPathBehaviour.currentCell
+    ) {
+      // Get next target
+      this.setNextCellIndex();
+      const targetCell = this.patrolRoute[this.nextCellIndex];
+      const path = getPath(
+        this.agent.followPathBehaviour.currentCell,
+        targetCell,
+        this.agent.grid.cells
+      );
+      if (path) this.agent.followPathBehaviour.setPath(path);
+    }
+  }
+
+  private setNextCellIndex() {
+    this.nextCellIndex++;
+
+    if (this.nextCellIndex >= this.patrolRoute.length) {
+      this.nextCellIndex = 0;
     }
   }
 }

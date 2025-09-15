@@ -47,6 +47,10 @@ export class FollowPathBehaviour {
     }
   }
 
+  isPathFinished() {
+    return this.path.length === 0;
+  }
+
   private setNextTransition() {
     // Start is always current cell
     const start = this.currentCell;
@@ -74,10 +78,6 @@ export class FollowPathBehaviour {
       this.currentTransition = new JumpTransition(this.agent, start, actualEnd);
       this.currentTransition.onStart();
     }
-  }
-
-  private isPathFinished() {
-    return this.path.length === 0;
   }
 
   private onFinishPath() {

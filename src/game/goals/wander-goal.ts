@@ -10,7 +10,7 @@ export class WanderGoal extends Goal {
 
   update(dt: number): void {
     // Done moving, fidget
-    if (!this.agent.followPathBehaviour.path.length) {
+    if (this.agent.followPathBehaviour.isPathFinished()) {
       this.idleTimer -= dt;
     }
 

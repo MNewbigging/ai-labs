@@ -3,7 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RenderPipeline } from "./render-pipeline";
 import { AssetManager } from "./asset-manager";
 import { GridBuilder } from "./grid/grid-builder";
-import { JumpExperiment } from "./experiments/jump-experiment";
+import { TestExperiment } from "./experiments/test-experiment";
 import { WanderExperiment } from "./experiments/wander-experiment";
 
 export class GameState {
@@ -17,7 +17,7 @@ export class GameState {
 
   private gridBuilder: GridBuilder;
   private wanderExperiment: WanderExperiment;
-  private jumpExperiment: JumpExperiment;
+  private testExperiment: TestExperiment;
 
   constructor(private assetManager: AssetManager) {
     this.setupCamera();
@@ -43,12 +43,12 @@ export class GameState {
       this.assetManager
     );
 
-    this.jumpExperiment = new JumpExperiment(
+    this.testExperiment = new TestExperiment(
       this.gridBuilder,
       this.assetManager
     );
 
-    this.scene.add(this.wanderExperiment.group); // this experiment is active by default so add it now
+    this.scene.add(this.testExperiment.group); // this experiment is active by default so add it now
 
     // Start game
     this.update();
@@ -76,7 +76,7 @@ export class GameState {
 
     this.controls.update();
 
-    this.wanderExperiment.update(dt);
+    this.testExperiment.update(dt);
 
     this.renderPipeline.render(dt);
   };

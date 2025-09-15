@@ -16,7 +16,9 @@ export abstract class CellTransition {
   ) {}
 
   onStart(): void {
-    const nextPos = this.endCell.object.position;
+    const nextPos = this.endCell.object.position.clone();
+    // Ensure we ignore height differences
+    nextPos.y = this.agent.model.position.y;
     const model = this.agent.model;
     this.rotationMatrix.lookAt(nextPos, model.position, model.up);
     this.targetQuaternion.setFromRotationMatrix(this.rotationMatrix);

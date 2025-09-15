@@ -18,23 +18,31 @@ export class TestExperiment {
     private assetManager: AssetManager
   ) {
     // Grid
-    const schema: GridSchema = [["floor", "floor", "floor", "floor"]];
+    const schema: GridSchema = [
+      ["floor", "floor", "floor", "floor", "floor", "floor"],
+    ];
     this.grid = gridBuilder.build(schema);
-    this.group.add(this.grid.group);
 
-    const start = this.grid.cells[0][0];
-    const mid = this.grid.cells[0][1];
-    const mid2 = this.grid.cells[0][2];
-    const end = this.grid.cells[0][3];
+    // Raise floor pieces to make stairs (todo - work out better way to do this)
+    const topRow = this.grid.cells[0];
+    // 0 at 0
+    topRow[1].object.position.y = 0.2;
+    topRow[2].object.position.y = 0.4;
+    topRow[3].object.position.y = 0.6;
+    topRow[4].object.position.y = 0.4;
+    topRow[5].object.position.y = 0.2;
+    // 6 at 0
+
+    this.group.add(this.grid.group);
 
     // Agent
     const model = this.assetManager.getDummyModel(TextureAsset.DummyYellow);
     const clips = this.assetManager.getDummyClips();
 
-    this.agent = new Agent(this.grid, model, clips, start);
+    this.agent = new Agent(this.grid, model, clips, topRow[0]);
     this.agent.brain.assignGoal(
       new PatrolGoal(this.agent, {
-        routeCells: [start, mid, mid2, end],
+        routeCells: [...topRow],
         waitTime: 1,
         reverse: true,
       })

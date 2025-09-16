@@ -2,9 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RenderPipeline } from "./render-pipeline";
 import { AssetManager } from "./asset-manager";
-import { GridBuilder } from "./grid/grid-builder";
-import { TestExperiment } from "./experiments/test-experiment";
-import { WanderExperiment } from "./experiments/wander-experiment";
+import { MainScene } from "./scenes/main-scene";
 
 export class GameState {
   private renderPipeline: RenderPipeline;
@@ -15,9 +13,7 @@ export class GameState {
   private camera = new THREE.PerspectiveCamera();
   private controls: OrbitControls;
 
-  private gridBuilder: GridBuilder;
-  private wanderExperiment: WanderExperiment;
-  private testExperiment: TestExperiment;
+  private mainScene: MainScene;
 
   constructor(private assetManager: AssetManager) {
     this.setupCamera();
@@ -36,19 +32,9 @@ export class GameState {
     window.addEventListener("focus", this.onGainFocus);
 
     //
-    this.gridBuilder = new GridBuilder(assetManager);
 
-    this.wanderExperiment = new WanderExperiment(
-      this.gridBuilder,
-      this.assetManager
-    );
-
-    this.testExperiment = new TestExperiment(
-      this.gridBuilder,
-      this.assetManager
-    );
-
-    this.scene.add(this.testExperiment.group); // this experiment is active by default so add it now
+    this.mainScene = new MainScene(assetManager);
+    this.scene.add(this.mainScene.group);
 
     // Start game
     this.update();
@@ -76,7 +62,7 @@ export class GameState {
 
     this.controls.update();
 
-    this.testExperiment.update(dt);
+    this.mainScene.update(dt);
 
     this.renderPipeline.render(dt);
   };

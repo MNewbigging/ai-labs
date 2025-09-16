@@ -4,63 +4,26 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 
-export enum AnimationAsset {
-  Idle = "A_Idle_Standing_Masc.fbx",
-  Idle2WalkF = "A_Idle_ToWalkF_Masc.fbx",
-  Walk = "A_Walk_F_Masc.fbx",
-  JumpStart = "jump_start.fbx",
-  JumpLoop = "jump_loop.fbx",
-  JumpEnd = "A_Land_IdleSoft_Masc.fbx",
-}
-
+// todo test floor tiles gltf - do I need the bin file too?
 export enum ModelAsset {
-  Dummy = "PolygonSyntyCharacter.fbx",
   FloorTileSmall = "floor_tile_small.fbx",
   SkeletonMinion = "Skeleton_Minion.glb",
   Barbarian = "Barbarian.glb",
 }
 
 export enum TextureAsset {
-  PrototypeBlack = "texture_06_black.png",
-  DummyGreen = "dummy_green.png",
-  DummyBlue = "dummy_blue.png",
-  DummyYellow = "dummy_yellow.png",
-  DummyRed = "dummy_red.png",
+  SomeTexture = "some_texture.png",
 }
 
 export class AssetManager {
   private models = new Map<ModelAsset, THREE.Group>();
   textures = new Map<TextureAsset, THREE.Texture>();
-  animations = new Map<AnimationAsset, THREE.AnimationClip>();
 
   private loadingManager = new THREE.LoadingManager();
   private fbxLoader = new FBXLoader(this.loadingManager);
   private gltfLoader = new GLTFLoader(this.loadingManager);
   private rgbeLoader = new RGBELoader(this.loadingManager);
   private textureLoader = new THREE.TextureLoader(this.loadingManager);
-
-  getDummyModel(colour: TextureAsset) {
-    const dummy = this.getModel(ModelAsset.Dummy);
-    this.applyModelTexture(dummy, colour);
-
-    return dummy;
-  }
-
-  getDummyClips() {
-    const clips: THREE.AnimationClip[] = [];
-    [
-      AnimationAsset.Idle,
-      AnimationAsset.Idle2WalkF,
-      AnimationAsset.Walk,
-      AnimationAsset.JumpStart,
-      AnimationAsset.JumpLoop,
-      AnimationAsset.JumpEnd,
-    ].forEach((name) => {
-      const clip = this.animations.get(name);
-      if (clip) clips.push(clip);
-    });
-    return clips;
-  }
 
   applyModelTexture(model: THREE.Object3D, textureName: TextureAsset) {
     const texture = this.textures.get(textureName);
@@ -93,8 +56,6 @@ export class AssetManager {
 
   load(): Promise<void> {
     this.loadModels();
-    this.loadTextures();
-    this.loadAnimations();
 
     return new Promise((resolve) => {
       this.loadingManager.onLoad = () => {
@@ -104,7 +65,6 @@ export class AssetManager {
   }
 
   private loadModels() {
-    this.loadModel(ModelAsset.Dummy);
     this.loadModel(ModelAsset.FloorTileSmall, (group) => {
       group.scale.multiplyScalar(0.01);
     });
@@ -113,15 +73,7 @@ export class AssetManager {
   }
 
   private loadTextures() {
-    Object.values(TextureAsset).forEach((filename) =>
-      this.loadTexture(filename)
-    );
-  }
-
-  private loadAnimations() {
-    Object.values(AnimationAsset).forEach((filename) =>
-      this.loadAnimation(filename)
-    );
+    // No textures to load just now
   }
 
   private loadModel(
@@ -162,19 +114,6 @@ export class AssetManager {
     loader.load(url, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       this.textures.set(filename, texture);
-    });
-  }
-
-  private loadAnimation(filename: AnimationAsset) {
-    const path = `${getPathPrefix()}/anims/${filename}`;
-    const url = getUrl(path);
-
-    this.fbxLoader.load(url, (group) => {
-      if (group.animations.length) {
-        const clip = group.animations[0];
-        clip.name = filename;
-        this.animations.set(filename, clip);
-      }
     });
   }
 }

@@ -6,7 +6,7 @@ import { Agent2 } from "../agent/Agent2";
 
 export class TestExperiment {
   group = new THREE.Group();
-  agent: Agent2;
+  agents: Agent2[] = [];
 
   constructor(
     private gridBuilder: GridBuilder,
@@ -14,19 +14,35 @@ export class TestExperiment {
   ) {
     // New assets
 
-    const floorTileSmall = this.assetManager.getModel(
-      ModelAsset.FloorTileSmall
-    );
-    this.group.add(floorTileSmall);
+    this.placeTile(new THREE.Vector3());
+    this.placeTile(new THREE.Vector3(2, 0, 0));
 
-    const model = this.assetManager.getModel(ModelAsset.SkeletonMinion);
-    this.group.add(model);
+    const barbarian = this.makeAgent(ModelAsset.SkeletonMinion);
+    barbarian.playAnimation("Idle");
 
-    this.agent = new Agent2(model);
-    this.agent.playAnimation("Walking_D_Skeletons");
+    const skelly = this.makeAgent(ModelAsset.SkeletonMinion);
+    skelly.model.position.x = 2;
+    skelly.playAnimation("Running_A");
   }
 
   update(dt: number) {
-    this.agent.update(dt);
+    this.agents.forEach((agent) => agent.update(dt));
+  }
+
+  private placeTile(pos: THREE.Vector3) {
+    const tile = this.assetManager.getModel(ModelAsset.FloorTileSmall);
+    tile.position.copy(pos);
+
+    this.group.add(tile);
+  }
+
+  private makeAgent(type: ModelAsset) {
+    const model = this.assetManager.getModel(type);
+    const agent = new Agent2(model);
+
+    this.group.add(agent.model);
+    this.agents.push(agent);
+
+    return agent;
   }
 }

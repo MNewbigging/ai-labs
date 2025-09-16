@@ -15,6 +15,9 @@ export enum AnimationAsset {
 
 export enum ModelAsset {
   Dummy = "PolygonSyntyCharacter.fbx",
+  FloorTileSmall = "floor_tile_small.fbx",
+  SkeletonMinion = "Skeleton_Minion.glb",
+  Barbarian = "Barbarian.glb",
 }
 
 export enum TextureAsset {
@@ -101,9 +104,12 @@ export class AssetManager {
   }
 
   private loadModels() {
-    this.loadModel(ModelAsset.Dummy, (group) => {
+    this.loadModel(ModelAsset.Dummy);
+    this.loadModel(ModelAsset.FloorTileSmall, (group) => {
       group.scale.multiplyScalar(0.01);
     });
+    this.loadModel(ModelAsset.SkeletonMinion);
+    this.loadModel(ModelAsset.Barbarian);
   }
 
   private loadTextures() {
@@ -131,6 +137,7 @@ export class AssetManager {
     if (filetype === "fbx") {
       this.fbxLoader.load(url, (group: THREE.Group) => {
         onLoad?.(group);
+
         this.models.set(filename, group);
       });
 
@@ -140,6 +147,7 @@ export class AssetManager {
     // GLTF
     this.gltfLoader.load(url, (gltf: GLTF) => {
       onLoad?.(gltf.scene);
+      gltf.scene.animations = gltf.animations;
       this.models.set(filename, gltf.scene);
     });
   }

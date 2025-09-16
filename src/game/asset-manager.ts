@@ -6,7 +6,7 @@ import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 
 // todo test floor tiles gltf - do I need the bin file too?
 export enum ModelAsset {
-  FloorTileSmall = "floor_tile_small.fbx",
+  FloorTileSmall = "floor_tile_small.gltf",
   SkeletonMinion = "Skeleton_Minion.glb",
   Barbarian = "Barbarian.glb",
 }
@@ -65,9 +65,7 @@ export class AssetManager {
   }
 
   private loadModels() {
-    this.loadModel(ModelAsset.FloorTileSmall, (group) => {
-      group.scale.multiplyScalar(0.01);
-    });
+    this.loadModel(ModelAsset.FloorTileSmall);
     this.loadModel(ModelAsset.SkeletonMinion);
     this.loadModel(ModelAsset.Barbarian);
   }

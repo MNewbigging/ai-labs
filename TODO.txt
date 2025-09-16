@@ -42,3 +42,18 @@ NOTES:
           nextAction.play();
         }
 
+
+New assets todo:
+
+- Merge in new assets branch now that I know it works. Remove all old assets stuff.
+
+- Replace Experiments with Scenes. There will be at most 2 scenes; the main one, and a tester one.
+
+- Lose the grid system. Placing objects in the scene and creating path nodes are separate systems,
+  albeit somewhat linked. Perhaps do something similar to my traffic scene road pieces & waypoints.
+  Need to keep in mind that I might want to create scenes in blender and export, so the node system 
+  should allow for that and be handcraft-able. 
+
+- Debug mode for path nodes so I can ensure it's made correctly.
+
+- Back to basics; square grid of floor tiles with wandering to start with.

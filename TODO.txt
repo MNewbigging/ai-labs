@@ -57,3 +57,32 @@ New assets todo:
 - Debug mode for path nodes so I can ensure it's made correctly.
 
 - Back to basics; square grid of floor tiles with wandering to start with.
+
+
+
+
+Pathfinding:
+
+I really need to decide on a direction for this project... 
+
+- make stuff in blender (possibly including the path node network)
+- keep it entirely grid based 
+
+
+- Node network; data structure that holds all the path nodes 
+- Path node; an individual node in the network, has references to its neighbours
+- A pathfinder class finds paths from start and end nodes within a node network
+
+One good thing about the old system was the nodes had a reference to its grid cell type, 
+allowing me to use CellTransitions which worked well. How can I achieve a similar thing?
+
+How can I determine the transition to use to move between two path nodes?
+
+Should the node object have a reference to the 3d piece that created it?
+
+All I really need to know is HOW to move between two nodes 
+If i had a prop with info on what created the path node, would that help?
+
+e.g node.type = 'floor' | 'stairs' ?
+
+but what about jumping over gaps? determining if a closed door is in the way?

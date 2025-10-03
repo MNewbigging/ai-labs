@@ -42,14 +42,12 @@ export class Agent2 {
     this.model.animations.forEach((clip) => {
       const action = this.mixer.clipAction(clip);
 
-      //    action.clampWhenFinished = true;
-
       this.actions.set(clip.name, action);
       names.push(clip.name);
     });
 
     names.sort();
 
-    console.log("names", names);
+    //console.log("names", names);
   }
 }
